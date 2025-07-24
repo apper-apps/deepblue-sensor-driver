@@ -1,0 +1,253 @@
+[
+  {
+    "Id": 1,
+    "email": "admin@deepblue.com",
+    "password": "admin123",
+    "firstName": "Sarah",
+    "lastName": "Ocean",
+    "role": "admin",
+    "isActive": true,
+    "createdAt": "2023-01-01T00:00:00Z",
+    "profileImage": "/uploads/profiles/sarah_ocean.jpg",
+    "bio": "Certified AIDA instructor with 15+ years of freediving experience. Passionate about ocean conservation and teaching safe diving practices.",
+    "location": "Dahab, Egypt",
+    "phone": "+20-123-456-789",
+    "emergencyContact": {
+      "name": "John Ocean",
+      "phone": "+20-123-456-790",
+      "relationship": "Spouse"
+    },
+    "certifications": [
+      {
+        "Id": 1,
+        "organization": "AIDA",
+        "level": "Master Instructor",
+        "issueDate": "2020-03-15",
+        "expiryDate": "2025-03-15",
+        "certificateNumber": "AIDA-MI-2020-001",
+        "verified": true
+      },
+      {
+        "Id": 2,
+        "organization": "PADI",
+        "level": "Freediver Instructor",
+        "issueDate": "2019-08-10",
+        "expiryDate": "2024-08-10",
+        "certificateNumber": "PADI-FI-2019-456",
+        "verified": true
+      }
+    ],
+    "personalBests": {
+      "CWT": 65,
+      "CWTB": 58,
+      "CNF": 45,
+      "STA": 420,
+      "DYN": 180,
+      "DYNB": 165
+    },
+    "safetyInfo": {
+      "medicalConditions": "None reported",
+      "buddyPreferences": "Experienced divers only",
+      "experienceLevel": "Expert",
+      "preferredDepths": "40m+"
+    },
+    "preferences": {
+      "visibility": "public",
+      "showContact": true,
+      "showCertifications": true
+    },
+    "profileComplete": true
+  },
+  {
+    "Id": 2,
+    "email": "marco.instructor@deepblue.com",
+    "password": "instructor123",
+    "firstName": "Marco",
+    "lastName": "Rossi",
+    "role": "instructor",
+    "isActive": true,
+    "createdAt": "2023-02-15T00:00:00Z",
+    "profileImage": "/uploads/profiles/marco_rossi.jpg",
+    "bio": "Professional freediving instructor specializing in depth training and competitive preparation. Based in the Mediterranean.",
+    "location": "Nice, France",
+    "phone": "+33-123-456-789",
+    "emergencyContact": {
+      "name": "Elena Rossi",
+      "phone": "+33-123-456-790",
+      "relationship": "Sister"
+    },
+    "certifications": [
+      {
+        "Id": 3,
+        "organization": "AIDA",
+        "level": "Advanced Instructor",
+        "issueDate": "2022-06-20",
+        "expiryDate": "2026-06-20",
+        "certificateNumber": "AIDA-AI-2022-089",
+        "verified": true
+      },
+      {
+        "Id": 4,
+        "organization": "SSI",
+        "level": "Freediving Instructor",
+        "issueDate": "2021-11-05",
+        "expiryDate": "2025-11-05",
+        "certificateNumber": "SSI-FI-2021-234",
+        "verified": true
+      }
+    ],
+    "personalBests": {
+      "CWT": 78,
+      "CWTB": 72,
+      "CNF": 62,
+      "STA": 380,
+      "DYN": 195,
+      "DYNB": 175
+    },
+    "safetyInfo": {
+      "medicalConditions": "None reported",
+      "buddyPreferences": "Any certified diver",
+      "experienceLevel": "Expert",
+      "preferredDepths": "50m+"
+    },
+    "preferences": {
+      "visibility": "public",
+      "showContact": true,
+      "showCertifications": true
+    },
+    "profileComplete": true
+  },
+  {
+    "Id": 3,
+    "email": "alex.student@example.com",
+    "password": "student123",
+    "firstName": "Alex",
+    "lastName": "Thompson",
+    "role": "student",
+    "isActive": true,
+    "createdAt": "2023-06-10T00:00:00Z",
+    "profileImage": null,
+    "bio": "New to freediving but absolutely passionate about it! Currently training for my AIDA 2 certification.",
+    "location": "Sydney, Australia",
+    "phone": "+61-123-456-789",
+    "emergencyContact": {
+      "name": "Lisa Thompson",
+      "phone": "+61-123-456-790",
+      "relationship": "Mother"
+    },
+    "certifications": [
+      {
+        "Id": 5,
+        "organization": "AIDA",
+        "level": "AIDA 1",
+        "issueDate": "2023-07-15",
+        "expiryDate": null,
+        "certificateNumber": "AIDA-1-2023-567",
+        "verified": true
+      }
+    ],
+    "personalBests": {
+      "CWT": 25,
+      "CWTB": 22,
+      "CNF": 15,
+      "STA": 180,
+      "DYN": 75,
+      "DYNB": 68
+    },
+    "safetyInfo": {
+      "medicalConditions": "Mild asthma (controlled)",
+      "buddyPreferences": "Instructor supervision preferred",
+      "experienceLevel": "Beginner",
+      "preferredDepths": "0-30m"
+    },
+    "preferences": {
+      "visibility": "public",
+      "showContact": false,
+      "showCertifications": true
+    },
+    "profileComplete": true
+  },
+  {
+    "Id": 4,
+    "email": "maya.diver@example.com",
+    "password": "maya123",
+    "firstName": "Maya",
+    "lastName": "Patel",
+    "role": "student",
+    "isActive": true,
+    "createdAt": "2023-09-05T00:00:00Z",
+    "profileImage": "/uploads/profiles/maya_patel.jpg",
+    "bio": "Competitive freediver focusing on dynamic disciplines. Training for national championships.",
+    "location": "Mumbai, India",
+    "phone": "+91-123-456-789",
+    "emergencyContact": {
+      "name": "Raj Patel",
+      "phone": "+91-123-456-790",
+      "relationship": "Father"
+    },
+    "certifications": [
+      {
+        "Id": 6,
+        "organization": "AIDA",
+        "level": "AIDA 3",
+        "issueDate": "2023-10-20",
+        "expiryDate": null,
+        "certificateNumber": "AIDA-3-2023-891",
+        "verified": true
+      },
+      {
+        "Id": 7,
+        "organization": "PADI",
+        "level": "Advanced Freediver",
+        "issueDate": "2023-08-12",
+        "expiryDate": null,
+        "certificateNumber": "PADI-AF-2023-123",
+        "verified": false
+      }
+    ],
+    "personalBests": {
+      "CWT": 42,
+      "CWTB": 38,
+      "CNF": 28,
+      "STA": 320,
+      "DYN": 145,
+      "DYNB": 135
+    },
+    "safetyInfo": {
+      "medicalConditions": "None reported",
+      "buddyPreferences": "Competitive divers",
+      "experienceLevel": "Intermediate",
+      "preferredDepths": "20-45m"
+    },
+    "preferences": {
+      "visibility": "public",
+      "showContact": true,
+      "showCertifications": true
+    },
+    "profileComplete": true
+  },
+  {
+    "Id": 5,
+    "email": "inactive@example.com",
+    "password": "inactive123",
+    "firstName": "Tom",
+    "lastName": "Wilson",
+    "role": "student",
+    "isActive": false,
+    "createdAt": "2023-03-20T00:00:00Z",
+    "profileImage": null,
+    "bio": "",
+    "location": "",
+    "phone": "",
+    "emergencyContact": {},
+    "certifications": [],
+    "personalBests": {},
+    "safetyInfo": {},
+    "preferences": {
+      "visibility": "private",
+      "showContact": false,
+      "showCertifications": false
+    },
+    "profileComplete": false
+  }
+]

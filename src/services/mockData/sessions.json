@@ -5,38 +5,58 @@
     "type": "open_water",
     "discipline": "CWT",
     "location": "Blue Hole, Dahab",
-    "notes": "Perfect conditions, calm seas and excellent visibility. Water temperature 24°C. Feeling strong today."
+    "instructorId": 1,
+    "buddyName": "Ahmed Hassan",
+    "safetyNotes": "Perfect safety conditions, calm seas. Used safety lanyard and surface support.",
+    "notes": "Perfect conditions, calm seas and excellent visibility. Water temperature 24°C. Feeling strong today.",
+    "userId": 3
   },
-  {
+{
     "Id": 2,
     "date": "2024-01-12",
     "type": "pool",
     "discipline": "STA",
     "location": "Aquatic Center Pool",
-    "notes": "Working on relaxation techniques. Pool temperature ideal at 28°C."
+    "instructorId": 2,
+    "buddyName": "Sarah Williams",
+    "safetyNotes": "Pool safety protocols followed. Instructor supervision throughout session.",
+    "notes": "Working on relaxation techniques. Pool temperature ideal at 28°C.",
+    "userId": 3
   },
-  {
+{
     "Id": 3,
     "date": "2024-01-10",
     "type": "open_water",
     "discipline": "CNF",
     "location": "Dean's Blue Hole",
-    "notes": "Challenging session with slight current. Good for technique practice."
+    "instructorId": null,
+    "buddyName": "Marco Rossi",
+    "safetyNotes": "Experienced buddy supervision. Surface support and safety protocols active.",
+    "notes": "Challenging session with slight current. Good for technique practice.",
+    "userId": 4
   },
-  {
+{
     "Id": 4,
     "date": "2024-01-08",
     "type": "pool",
     "discipline": "DYN",
     "location": "50m Competition Pool",
-    "notes": "Distance training session. Focused on efficient finning technique and turn mechanics."
+    "instructorId": 2,
+    "buddyName": "Training Group",
+    "safetyNotes": "Pool training session with multiple safety spotters. Competition pool standards.",
+    "notes": "Distance training session. Focused on efficient finning technique and turn mechanics.",
+    "userId": 4
   },
-  {
+{
     "Id": 5,
     "date": "2024-01-05",
     "type": "open_water",
     "discipline": "CWTB",
     "location": "Red Sea, Sharm El Sheikh",
-    "notes": "Bifins training day. Working on power and efficiency with new fins."
+    "instructorId": 1,
+    "buddyName": "Elena Rodriguez",
+    "safetyNotes": "New equipment testing with instructor supervision. All safety checks completed.",
+    "notes": "Bifins training day. Working on power and efficiency with new fins.",
+    "userId": 3
   }
 ]

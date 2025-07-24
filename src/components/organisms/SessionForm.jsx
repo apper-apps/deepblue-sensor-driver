@@ -8,15 +8,21 @@ import ApperIcon from "@/components/ApperIcon";
 import DisciplineBadge from "@/components/molecules/DisciplineBadge";
 import { SessionService } from "@/services/api/sessionService";
 import { DiveService } from "@/services/api/diveService";
+import { UserService } from "@/services/api/userService";
+import { useAuth } from "@/contexts/AuthContext";
 import { format } from "date-fns";
 
 const SessionForm = () => {
   const navigate = useNavigate();
+  const { user, isInstructor } = useAuth();
   const [sessionData, setSessionData] = useState({
     date: format(new Date(), "yyyy-MM-dd"),
     type: "",
     discipline: "",
     location: "",
+    instructorId: "",
+    buddyName: "",
+    safetyNotes: "",
     notes: ""
   });
   
@@ -28,7 +34,21 @@ const SessionForm = () => {
     notes: ""
   });
   
+  const [instructors, setInstructors] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    loadInstructors();
+  }, []);
+
+  const loadInstructors = async () => {
+    try {
+      const instructorData = await UserService.getInstructors();
+      setInstructors(instructorData);
+    } catch (error) {
+      console.error('Failed to load instructors:', error);
+    }
+  };
 
   const disciplineOptions = {
     open_water: [
@@ -113,14 +133,17 @@ const SessionForm = () => {
       return;
     }
 
-    setLoading(true);
-    try {
+try {
       const session = await SessionService.create({
         date: sessionData.date,
         type: sessionData.type,
         discipline: sessionData.discipline,
         location: sessionData.location,
-        notes: sessionData.notes
+        instructorId: sessionData.instructorId ? parseInt(sessionData.instructorId) : null,
+        buddyName: sessionData.buddyName,
+        safetyNotes: sessionData.safetyNotes,
+        notes: sessionData.notes,
+        userId: user.Id
       });
 
       for (const dive of dives) {
@@ -249,16 +272,51 @@ const SessionForm = () => {
               value={sessionData.location}
               onChange={(e) => handleSessionChange("location", e.target.value)}
               placeholder="Enter dive location"
+/>
+          </div>
+        )}
+
+        {/* Instructor and Safety Information */}
+        {sessionData.type && sessionData.discipline && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <FormField
+              label="Instructor/Coach"
+              type="select"
+              value={sessionData.instructorId}
+              onChange={(e) => handleSessionChange("instructorId", e.target.value)}
+            >
+              <option value="">No instructor supervision</option>
+              {instructors.map(instructor => (
+                <option key={instructor.Id} value={instructor.Id}>
+                  {instructor.firstName} {instructor.lastName} ({instructor.role})
+                </option>
+              ))}
+            </FormField>
+            
+            <FormField
+              label="Buddy Name"
+              value={sessionData.buddyName}
+              onChange={(e) => handleSessionChange("buddyName", e.target.value)}
+              placeholder="Safety buddy or diving partner"
             />
           </div>
         )}
 
-        <div className="mt-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <FormField
+            label="Safety Notes"
+            value={sessionData.safetyNotes}
+            onChange={(e) => handleSessionChange("safetyNotes", e.target.value)}
+            placeholder="Safety protocols, equipment used, etc."
+            rows={2}
+          />
+          
           <FormField
             label="Session Notes"
             value={sessionData.notes}
             onChange={(e) => handleSessionChange("notes", e.target.value)}
-            placeholder="Optional notes about conditions, equipment, etc."
+            placeholder="General observations, conditions, etc."
+            rows={2}
           />
         </div>
       </Card>
