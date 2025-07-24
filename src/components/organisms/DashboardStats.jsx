@@ -8,7 +8,6 @@ import { SessionService } from "@/services/api/sessionService";
 import { DiveService } from "@/services/api/diveService";
 const DashboardStats = () => {
 const [stats, setStats] = useState({
-    totalSessions: 0,
     totalDives: 0,
     maxDepth: 0,
     maxDistance: 0,
@@ -37,10 +36,18 @@ const [stats, setStats] = useState({
         STA: 0
       }
     },
-    mostRecordedDiscipline: {
+mostRecordedDiscipline: {
       name: '',
       count: 0,
       type: ''
+    },
+    favoriteDiveBuddy: {
+      name: '',
+      count: 0
+    },
+    favoriteDiveSite: {
+      name: '',
+      count: 0
     }
   });
   const [loading, setLoading] = useState(true);
@@ -84,7 +91,6 @@ const loadStats = async () => {
       const chartData = calculateChartData(sessions, allDives);
 
 setStats({
-        totalSessions: sessions.length,
         totalDives: allDives.length,
         maxDepth,
         maxDistance,
@@ -127,10 +133,40 @@ const calculateChartData = (sessions, dives) => {
       openWater: { CWT: 0, CWTB: 0, CNF: 0, FIM: 0 },
       pool: { DYN: 0, DYNB: 0, DNF: 0, STA: 0 }
     };
-
-    let diveTypeComparison = { openWater: 0, pool: 0 };
+let diveTypeComparison = { openWater: 0, pool: 0 };
     let mostRecordedDiscipline = { name: '', count: 0, type: '' };
+    
+    // Calculate favorite dive buddy and dive site
+    const buddyCount = {};
+    const siteCount = {};
+    
+    sessions.forEach(session => {
+      if (session.buddyName && session.buddyName.trim() !== '') {
+        const buddy = session.buddyName.trim();
+        buddyCount[buddy] = (buddyCount[buddy] || 0) + 1;
+      }
+      if (session.location && session.location.trim() !== '') {
+        const site = session.location.trim();
+        siteCount[site] = (siteCount[site] || 0) + 1;
+      }
+    });
+    
+    let favoriteDiveBuddy = { name: '', count: 0 };
+    let favoriteDiveSite = { name: '', count: 0 };
+    
+    for (const [buddy, count] of Object.entries(buddyCount)) {
+      if (count > favoriteDiveBuddy.count) {
+        favoriteDiveBuddy = { name: buddy, count };
+      }
+    }
+    
+    for (const [site, count] of Object.entries(siteCount)) {
+      if (count > favoriteDiveSite.count) {
+        favoriteDiveSite = { name: site, count };
+      }
+    }
 
+    Object.values(sessionDiveMap)
     Object.values(sessionDiveMap)
       .sort((a, b) => new Date(a.date) - new Date(b.date))
       .forEach(session => {
@@ -202,11 +238,13 @@ const calculateChartData = (sessions, dives) => {
       }
     }
 
-    return {
+return {
       progressData: disciplineProgress,
       diveTypeComparison,
       disciplineStats,
-      mostRecordedDiscipline
+      mostRecordedDiscipline,
+      favoriteDiveBuddy,
+      favoriteDiveSite
     };
   };
 
@@ -403,7 +441,7 @@ const renderPieChart = () => {
     );
   };
 
-  const renderPoolBarChart = () => {
+const renderPoolBarChart = () => {
     const disciplines = stats.disciplineStats.pool;
     const data = Object.entries(disciplines).map(([key, value]) => ({ discipline: key, count: value }));
     const colors = ['#8b5cf6', '#a855f7', '#9333ea', '#10b981'];
@@ -419,9 +457,14 @@ const renderPieChart = () => {
           height: 300,
           toolbar: { show: false }
         },
+        plotOptions: {
+          bar: {
+            horizontal: true,
+            barHeight: '60%'
+          }
+        },
         colors: colors,
         xaxis: {
-          categories: data.map(item => item.discipline),
           labels: {
             style: {
               colors: '#64748b',
@@ -430,6 +473,7 @@ const renderPieChart = () => {
           }
         },
         yaxis: {
+          categories: data.map(item => item.discipline),
           labels: {
             style: {
               colors: '#64748b',
@@ -552,7 +596,7 @@ const renderPieChart = () => {
     );
   };
 
-  const renderDisciplineChart = (discipline, data) => {
+const renderDisciplineChart = (discipline, data, chartType = 'line') => {
     const config = getDisciplineConfig(discipline);
     
     if (data.length === 0) {
@@ -570,80 +614,117 @@ const renderPieChart = () => {
       );
     }
 
+    const isHorizontal = ['DYN', 'DYNB', 'DNF'].includes(discipline);
+    const actualChartType = chartType === 'line' ? 'line' : 'bar';
+
     const chartData = {
       series: [{
         name: `${config.metric} (${config.unit})`,
-        data: data.map(item => ({
-          x: new Date(item.date).getTime(),
-          y: config.metric === 'depth' ? -Math.abs(item.value) : item.value, // Negative depth values for open water
-          discipline: item.discipline
-        }))
+        data: actualChartType === 'line' 
+          ? data.map(item => ({
+              x: new Date(item.date).getTime(),
+              y: config.metric === 'depth' ? -Math.abs(item.value) : item.value,
+              discipline: item.discipline
+            }))
+          : data.map(item => item.value)
       }],
       options: {
         chart: {
-          type: 'line',
+          type: actualChartType,
           height: 300,
-          toolbar: {
-            show: false
-          },
-          zoom: {
-            enabled: false
-          }
+          toolbar: { show: false },
+          zoom: { enabled: false }
         },
+        ...(actualChartType === 'bar' && {
+          plotOptions: {
+            bar: {
+              horizontal: isHorizontal,
+              barHeight: isHorizontal ? '60%' : undefined
+            }
+          }
+        }),
         colors: [config.color],
-        stroke: {
-          curve: 'smooth',
-          width: 3
-        },
-        markers: {
-          size: 6,
-          colors: [config.color],
-          strokeColors: '#fff',
-          strokeWidth: 2,
-          hover: {
-            size: 8
+        ...(actualChartType === 'line' && {
+          stroke: {
+            curve: 'smooth',
+            width: 3
+          },
+          markers: {
+            size: 6,
+            colors: [config.color],
+            strokeColors: '#fff',
+            strokeWidth: 2,
+            hover: { size: 8 }
           }
-        },
+        }),
         grid: {
           borderColor: '#f1f5f9',
           strokeDashArray: 3
         },
-        xaxis: {
-          type: 'datetime',
-          labels: {
-            style: {
-              colors: '#64748b',
-              fontSize: '12px'
+        xaxis: actualChartType === 'line' 
+          ? {
+              type: 'datetime',
+              labels: {
+                style: {
+                  colors: '#64748b',
+                  fontSize: '12px'
+                }
+              }
             }
-          }
-        },
-        yaxis: {
-          labels: {
-            style: {
-              colors: '#64748b',
-              fontSize: '12px'
+          : {
+              categories: data.map((_, index) => `Session ${index + 1}`),
+              labels: {
+                style: {
+                  colors: '#64748b',
+                  fontSize: '12px'
+                }
+              }
             },
-            formatter: function(value) {
-              const displayValue = config.metric === 'depth' ? Math.abs(value) : value;
-              return displayValue + config.unit;
+        yaxis: isHorizontal && actualChartType === 'bar'
+          ? {
+              categories: data.map((_, index) => `Session ${index + 1}`),
+              labels: {
+                style: {
+                  colors: '#64748b',
+                  fontSize: '12px'
+                }
+              }
             }
-          }
-        },
-        tooltip: {
-          custom: function({ series, seriesIndex, dataPointIndex, w }) {
-            const data = w.config.series[seriesIndex].data[dataPointIndex];
-            const date = new Date(data.x).toLocaleDateString();
-            const displayValue = config.metric === 'depth' ? Math.abs(data.y) : data.y;
-            const value = displayValue + config.unit;
-            return `
-              <div class="bg-white p-3 rounded-lg shadow-lg border">
-                <div class="font-semibold text-gray-900">${date}</div>
-                <div style="color: ${config.color}">${config.metric}: ${value}</div>
-                <div class="text-sm text-gray-600">${config.title}</div>
-              </div>
-            `;
-          }
-        },
+          : {
+              labels: {
+                style: {
+                  colors: '#64748b',
+                  fontSize: '12px'
+                },
+                formatter: function(value) {
+                  const displayValue = config.metric === 'depth' ? Math.abs(value) : value;
+                  return displayValue + config.unit;
+                }
+              }
+            },
+        tooltip: actualChartType === 'line'
+          ? {
+              custom: function({ series, seriesIndex, dataPointIndex, w }) {
+                const data = w.config.series[seriesIndex].data[dataPointIndex];
+                const date = new Date(data.x).toLocaleDateString();
+                const displayValue = config.metric === 'depth' ? Math.abs(data.y) : data.y;
+                const value = displayValue + config.unit;
+                return `
+                  <div class="bg-white p-3 rounded-lg shadow-lg border">
+                    <div class="font-semibold text-gray-900">${date}</div>
+                    <div style="color: ${config.color}">${config.metric}: ${value}</div>
+                    <div class="text-sm text-gray-600">${config.title}</div>
+                  </div>
+                `;
+              }
+            }
+          : {
+              y: {
+                formatter: function(value) {
+                  return value + config.unit;
+                }
+              }
+            },
         responsive: [{
           breakpoint: 768,
           options: {
@@ -664,24 +745,18 @@ const renderPieChart = () => {
         <Chart
           options={chartData.options}
           series={chartData.series}
-          type="line"
+          type={actualChartType}
           height={300}
         />
       </Card>
     );
   };
 
-  return (
+return (
     <div className="space-y-8">
-      {/* Existing Metrics Grid */}
+      {/* Reorganized Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <MetricCard
-          title="Total Sessions"
-          value={stats.totalSessions}
-          icon="Calendar"
-          className="bg-primary-50 border-primary-200"
-        />
-        
+        {/* 1. Total Dives */}
         <MetricCard
           title="Total Dives"
           value={stats.totalDives}
@@ -689,6 +764,18 @@ const renderPieChart = () => {
           className="bg-blue-50 border-blue-200"
         />
         
+        {/* 2. Most Recorded Discipline */}
+        {stats.mostRecordedDiscipline.name && (
+          <MetricCard
+            title="Most Recorded Discipline"
+            value={stats.mostRecordedDiscipline.name}
+            subtitle={`${stats.mostRecordedDiscipline.count} dives (${stats.mostRecordedDiscipline.type})`}
+            icon="Trophy"
+            className="bg-primary-50 border-primary-200"
+          />
+        )}
+        
+        {/* 3. Max Depth */}
         <MetricCard
           title="Max Depth"
           value={stats.maxDepth}
@@ -697,6 +784,7 @@ const renderPieChart = () => {
           gradient={true}
         />
         
+        {/* 4. Max Distance */}
         <MetricCard
           title="Max Distance"
           value={stats.maxDistance}
@@ -705,6 +793,7 @@ const renderPieChart = () => {
           className="bg-purple-50 border-purple-200"
         />
         
+        {/* 5. Best Static Time */}
         <MetricCard
           title="Best Static Time"
           value={stats.maxTime > 0 ? formatTime(stats.maxTime) : "0:00"}
@@ -712,6 +801,29 @@ const renderPieChart = () => {
           className="bg-green-50 border-green-200"
         />
         
+        {/* 6. My Favorite Dive Buddy */}
+        {stats.favoriteDiveBuddy.name && (
+          <MetricCard
+            title="My Favorite Dive Buddy"
+            value={stats.favoriteDiveBuddy.name}
+            subtitle={`${stats.favoriteDiveBuddy.count} sessions together`}
+            icon="Users"
+            className="bg-yellow-50 border-yellow-200"
+          />
+        )}
+        
+        {/* 7. Most Favorite Dive Site */}
+        {stats.favoriteDiveSite.name && (
+          <MetricCard
+            title="Most Favorite Dive Site"
+            value={stats.favoriteDiveSite.name}
+            subtitle={`${stats.favoriteDiveSite.count} sessions recorded`}
+            icon="MapPin"
+            className="bg-cyan-50 border-cyan-200"
+          />
+        )}
+        
+        {/* 8. Recent Activity */}
         <MetricCard
           title="Recent Activity"
           value={stats.recentSessions.length}
@@ -721,77 +833,47 @@ const renderPieChart = () => {
         />
       </div>
 
-{/* Discipline-Specific Progress Charts */}
-      <div className="space-y-6">
-        <div>
-          <h2 className="text-xl font-bold font-display text-gray-900 mb-2">Discipline Progress Charts</h2>
-          <p className="text-gray-600">Track your improvement in each freediving discipline</p>
-        </div>
-        
-<div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {renderDisciplineChart('CWT', stats.progressData.CWT)}
-          {renderDisciplineChart('CWTB', stats.progressData.CWTB)}
-          {renderDisciplineChart('CNF', stats.progressData.CNF)}
-          {renderDisciplineChart('FIM', stats.progressData.FIM)}
-          {renderDisciplineChart('DYN', stats.progressData.DYN)}
-          {renderDisciplineChart('DYNB', stats.progressData.DYNB)}
-          {renderDisciplineChart('DNF', stats.progressData.DNF)}
-          {stats.progressData.STA && stats.progressData.STA.length > 0 && 
-            renderDisciplineChart('STA', stats.progressData.STA)}
-        </div>
-</div>
-
-      {/* New Comprehensive Charts Section */}
+      {/* 9. Dive Analytics */}
       <div className="space-y-6">
         <div>
           <h2 className="text-xl font-bold font-display text-gray-900 mb-2">Dive Analytics</h2>
           <p className="text-gray-600">Comprehensive analysis of your freediving performance</p>
         </div>
 
-        {/* Most Recorded Discipline */}
-        {stats.mostRecordedDiscipline.name && (
-          <Card className="p-6 bg-gradient-to-r from-primary-50 to-blue-50 border-primary-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-semibold font-display text-gray-900 mb-2">
-                  Most Recorded Discipline
-                </h3>
-                <div className="flex items-center space-x-2">
-                  <span className="text-2xl font-bold text-primary-600">
-                    {stats.mostRecordedDiscipline.name}
-                  </span>
-                  <span className="text-sm text-gray-600">
-                    ({stats.mostRecordedDiscipline.type})
-                  </span>
-                </div>
-                <p className="text-sm text-gray-600 mt-1">
-                  {stats.mostRecordedDiscipline.count} recorded dives
-                </p>
-              </div>
-              <div className="text-4xl">🏆</div>
-            </div>
-          </Card>
-        )}
-
-        {/* Dive Type Comparison Pie Chart */}
+        {/* Dive Type Distribution */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {renderPieChart()}
-          
-          {/* Open Water Disciplines Bar Chart */}
           {renderOpenWaterBarChart()}
         </div>
 
-        {/* Pool Disciplines Bar Chart */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Total Dives by Pool Discipline in Horizontal bar chart */}
+        <div className="grid grid-cols-1 gap-6">
           {renderPoolBarChart()}
-          
-          {/* Distance Disciplines Horizontal Chart */}
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold font-display text-gray-900 mb-4">
-              Distance Disciplines Comparison
-            </h3>
-            {renderDistanceHorizontalChart()}
-          </Card>
+        </div>
+      </div>
+
+      {/* Discipline Progress Charts */}
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-xl font-bold font-display text-gray-900 mb-2">Discipline Progress Charts</h2>
+          <p className="text-gray-600">Track your improvement in each freediving discipline</p>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+          {/* CWT in vertical bar chart */}
+          {renderDisciplineChart('CWT', stats.progressData.CWT, 'bar')}
+          {/* CWTB in vertical bar chart */}
+          {renderDisciplineChart('CWTB', stats.progressData.CWTB, 'bar')}
+          {/* CNF in vertical bar chart */}
+          {renderDisciplineChart('CNF', stats.progressData.CNF, 'bar')}
+          {/* Free Immersion in vertical bar chart */}
+          {renderDisciplineChart('FIM', stats.progressData.FIM, 'bar')}
+          {/* DYN in horizontal bar chart */}
+          {renderDisciplineChart('DYN', stats.progressData.DYN, 'bar')}
+          {/* DYNB in horizontal bar chart */}
+          {renderDisciplineChart('DYNB', stats.progressData.DYNB, 'bar')}
+          {/* DNF in horizontal bar chart */}
+          {renderDisciplineChart('DNF', stats.progressData.DNF, 'bar')}
         </div>
       </div>
     </div>
