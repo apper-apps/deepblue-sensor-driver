@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
-import Card from '@/components/atoms/Card';
-import Button from '@/components/atoms/Button';
-import FormField from '@/components/molecules/FormField';
-import ApperIcon from '@/components/ApperIcon';
-import Loading from '@/components/ui/Loading';
-import Error from '@/components/ui/Error';
-import { useAuth } from '@/contexts/AuthContext';
-import { UserService } from '@/services/api/userService';
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { useAuth } from "@/contexts/AuthContext";
+import { UserService } from "@/services/api/userService";
+import ApperIcon from "@/components/ApperIcon";
+import Select from "@/components/atoms/Select";
+import Card from "@/components/atoms/Card";
+import Button from "@/components/atoms/Button";
+import FormField from "@/components/molecules/FormField";
+import Error from "@/components/ui/Error";
+import Loading from "@/components/ui/Loading";
 
 const Profile = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [activeTab, setActiveTab] = useState('personal');
+const [activeTab, setActiveTab] = useState('personal');
   const [profileData, setProfileData] = useState({
     firstName: '',
     lastName: '',
@@ -35,10 +36,12 @@ const Profile = () => {
       visibility: 'public',
       showContact: false,
       showCertifications: true
-    }
+    },
+    goals: [],
+    diary: []
   });
 
-  useEffect(() => {
+useEffect(() => {
     if (user) {
       setProfileData({
         firstName: user.firstName || '',
@@ -61,7 +64,9 @@ const Profile = () => {
           visibility: 'public',
           showContact: false,
           showCertifications: true
-        }
+        },
+        goals: user.goals || [],
+        diary: user.diary || []
       });
     }
   }, [user]);
@@ -95,11 +100,13 @@ const Profile = () => {
     }
   };
 
-  const tabs = [
+const tabs = [
     { id: 'personal', label: 'Personal Info', icon: 'User' },
     { id: 'emergency', label: 'Emergency Contact', icon: 'Phone' },
     { id: 'safety', label: 'Safety Info', icon: 'Shield' },
-    { id: 'privacy', label: 'Privacy', icon: 'Lock' }
+    { id: 'privacy', label: 'Privacy', icon: 'Lock' },
+    { id: 'goals', label: 'Goals', icon: 'Target' },
+    { id: 'diary', label: 'Diary', icon: 'BookOpen' }
   ];
 
   const PersonalInfoTab = () => (
@@ -282,9 +289,222 @@ const Profile = () => {
           />
           <span className="ml-2 text-sm text-gray-700">Show certifications and achievements</span>
         </label>
-      </div>
+</div>
     </div>
   );
+  const GoalsTab = () => {
+    const addGoal = () => {
+      const newGoal = {
+        id: Date.now(),
+        goal: '',
+        description: '',
+        tag: '',
+        targetDate: '',
+        estimatedBudget: ''
+      };
+      setProfileData(prev => ({
+        ...prev,
+        goals: [...prev.goals, newGoal]
+      }));
+    };
+
+    const updateGoal = (id, field, value) => {
+      setProfileData(prev => ({
+        ...prev,
+        goals: prev.goals.map(goal => 
+          goal.id === id ? { ...goal, [field]: value } : goal
+        )
+      }));
+    };
+
+    const removeGoal = (id) => {
+      setProfileData(prev => ({
+        ...prev,
+        goals: prev.goals.filter(goal => goal.id !== id)
+      }));
+    };
+
+    return (
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h3 className="text-lg font-semibold text-gray-900">Dive Goals & Bucket List</h3>
+          <Button onClick={addGoal} size="sm">
+            <ApperIcon name="Plus" size={16} className="mr-2" />
+            Add Goal
+          </Button>
+        </div>
+
+        {profileData.goals.length === 0 ? (
+          <div className="text-center py-8 text-gray-500">
+            <ApperIcon name="Target" size={48} className="mx-auto mb-4 text-gray-300" />
+            <p>No goals added yet. Start by adding your first dive goal!</p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {profileData.goals.map((goal) => (
+              <Card key={goal.id} className="p-4">
+                <div className="flex justify-between items-start mb-4">
+                  <h4 className="font-medium text-gray-900">Goal #{profileData.goals.indexOf(goal) + 1}</h4>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => removeGoal(goal.id)}
+                    className="text-red-600 hover:text-red-700"
+                  >
+                    <ApperIcon name="Trash2" size={14} />
+                  </Button>
+                </div>
+                
+                <div className="space-y-4">
+                  <FormField
+                    label="Goal"
+                    value={goal.goal}
+                    onChange={(e) => updateGoal(goal.id, 'goal', e.target.value)}
+                    placeholder="e.g., Visit the Great Blue Hole, Achieve 50m depth"
+                    required
+                  />
+
+                  <FormField
+                    label="Description"
+                    value={goal.description}
+                    onChange={(e) => updateGoal(goal.id, 'description', e.target.value)}
+                    placeholder="Describe your goal in detail..."
+                    rows={3}
+                  />
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <FormField
+                      label="Tag"
+                      type="select"
+                      value={goal.tag}
+                      onChange={(e) => updateGoal(goal.id, 'tag', e.target.value)}
+                    >
+                      <option value="">Select category</option>
+                      <option value="training">Training</option>
+                      <option value="travel">Travel</option>
+                      <option value="education">Education</option>
+                      <option value="others">Others</option>
+                    </FormField>
+
+                    <FormField
+                      label="Target Date"
+                      type="date"
+                      value={goal.targetDate}
+                      onChange={(e) => updateGoal(goal.id, 'targetDate', e.target.value)}
+                    />
+
+                    <FormField
+                      label="Estimated Budget"
+                      value={goal.estimatedBudget}
+                      onChange={(e) => updateGoal(goal.id, 'estimatedBudget', e.target.value)}
+                      placeholder="$0"
+                    />
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const DiaryTab = () => {
+    const addDiaryEntry = () => {
+      const newEntry = {
+        id: Date.now(),
+        title: '',
+        body: '',
+        tags: '',
+        date: new Date().toISOString().split('T')[0]
+      };
+      setProfileData(prev => ({
+        ...prev,
+        diary: [...prev.diary, newEntry]
+      }));
+    };
+
+    const updateDiaryEntry = (id, field, value) => {
+      setProfileData(prev => ({
+        ...prev,
+        diary: prev.diary.map(entry => 
+          entry.id === id ? { ...entry, [field]: value } : entry
+        )
+      }));
+    };
+
+    const removeDiaryEntry = (id) => {
+      setProfileData(prev => ({
+        ...prev,
+        diary: prev.diary.filter(entry => entry.id !== id)
+      }));
+    };
+
+    return (
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h3 className="text-lg font-semibold text-gray-900">Dive Diary & Notes</h3>
+          <Button onClick={addDiaryEntry} size="sm">
+            <ApperIcon name="Plus" size={16} className="mr-2" />
+            Add Entry
+          </Button>
+        </div>
+
+        {profileData.diary.length === 0 ? (
+          <div className="text-center py-8 text-gray-500">
+            <ApperIcon name="BookOpen" size={48} className="mx-auto mb-4 text-gray-300" />
+            <p>No diary entries yet. Start documenting your diving journey!</p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {profileData.diary.map((entry) => (
+              <Card key={entry.id} className="p-4">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex items-center space-x-2">
+                    <h4 className="font-medium text-gray-900">Entry #{profileData.diary.indexOf(entry) + 1}</h4>
+                    <span className="text-sm text-gray-500">{entry.date}</span>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => removeDiaryEntry(entry.id)}
+                    className="text-red-600 hover:text-red-700"
+                  >
+                    <ApperIcon name="Trash2" size={14} />
+                  </Button>
+                </div>
+                
+                <div className="space-y-4">
+                  <FormField
+                    label="Title"
+                    value={entry.title}
+                    onChange={(e) => updateDiaryEntry(entry.id, 'title', e.target.value)}
+                    placeholder="Entry title..."
+                    required
+                  />
+
+                  <FormField
+                    label="Body"
+                    value={entry.body}
+                    onChange={(e) => updateDiaryEntry(entry.id, 'body', e.target.value)}
+                    placeholder="Write your thoughts, realizations, training plans..."
+                    rows={6}
+                  />
+
+                  <FormField
+                    label="Tags"
+                    value={entry.tags}
+                    onChange={(e) => updateDiaryEntry(entry.id, 'tags', e.target.value)}
+                    placeholder="training, technique, mental-prep, equipment (comma separated)"
+                  />
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+};
 
   return (
     <div className="space-y-6">
@@ -325,12 +545,14 @@ const Profile = () => {
         </div>
 
         {/* Tab Content */}
-        <div className="flex-1">
+<div className="flex-1">
           <Card className="p-6">
             {activeTab === 'personal' && <PersonalInfoTab />}
             {activeTab === 'emergency' && <EmergencyContactTab />}
             {activeTab === 'safety' && <SafetyInfoTab />}
             {activeTab === 'privacy' && <PrivacyTab />}
+            {activeTab === 'goals' && <GoalsTab />}
+            {activeTab === 'diary' && <DiaryTab />}
 
             <div className="mt-6 pt-6 border-t border-gray-200">
               <div className="flex justify-end space-x-3">
