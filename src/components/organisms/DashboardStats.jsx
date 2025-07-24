@@ -41,8 +41,7 @@ STA: 0
       name: '',
       count: 0,
       type: ''
-    },
-    favoriteDiveBuddy: {
+},
     favoriteDiveBuddy: {
       name: '',
       count: 0
