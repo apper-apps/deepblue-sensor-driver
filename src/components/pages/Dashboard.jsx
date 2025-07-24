@@ -17,14 +17,26 @@ const Dashboard = () => {
     return "Good evening";
   };
 
-  return (
+return (
     <div className="space-y-8">
       {/* Welcome Section */}
       <div className="text-center">
-        <h1 className="text-3xl font-bold font-display text-gray-900 mb-2">
+        <h1 className={`text-3xl font-bold font-display mb-2 transition-colors ${
+          document.body.classList.contains('theme-dark') 
+            ? 'text-gray-100' 
+            : document.body.classList.contains('theme-dive')
+            ? 'text-blue-100'
+            : 'text-gray-900'
+        }`}>
           {getGreeting()}, {user?.firstName}!
         </h1>
-        <p className="text-gray-600">
+        <p className={`transition-colors ${
+          document.body.classList.contains('theme-dark') 
+            ? 'text-gray-300' 
+            : document.body.classList.contains('theme-dive')
+            ? 'text-blue-200'
+            : 'text-gray-600'
+        }`}>
           Welcome to your freediving portal - track your progress and connect with the community
         </p>
       </div>
@@ -84,16 +96,46 @@ const Dashboard = () => {
       
       <DashboardStats />
       {/* Quick Start for New Users */}
-      {user?.certifications?.length === 0 && (
-        <Card className="p-6 bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-200">
+{user?.certifications?.length === 0 && (
+        <Card className={`p-6 border transition-colors ${
+          document.body.classList.contains('theme-dark') 
+            ? 'bg-gradient-to-br from-gray-800 to-gray-700 border-gray-600' 
+            : document.body.classList.contains('theme-dive')
+            ? 'bg-gradient-to-br from-ocean-deep to-ocean-mid border-ocean-surface'
+            : 'bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-200'
+        }`}>
           <div className="text-center">
-            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <ApperIcon name="Waves" size={32} className="text-blue-600" />
+            <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${
+              document.body.classList.contains('theme-dark') 
+                ? 'bg-gray-700' 
+                : document.body.classList.contains('theme-dive')
+                ? 'bg-ocean-mid'
+                : 'bg-blue-100'
+            }`}>
+              <ApperIcon name="Waves" size={32} className={
+                document.body.classList.contains('theme-dark') 
+                  ? 'text-blue-400' 
+                  : document.body.classList.contains('theme-dive')
+                  ? 'text-blue-200'
+                  : 'text-blue-600'
+              } />
             </div>
-            <h3 className="text-lg font-semibold font-display text-gray-900 mb-2">
+            <h3 className={`text-lg font-semibold font-display mb-2 transition-colors ${
+              document.body.classList.contains('theme-dark') 
+                ? 'text-gray-100' 
+                : document.body.classList.contains('theme-dive')
+                ? 'text-blue-100'
+                : 'text-gray-900'
+            }`}>
               Ready to start your freediving journey?
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className={`mb-4 transition-colors ${
+              document.body.classList.contains('theme-dark') 
+                ? 'text-gray-300' 
+                : document.body.classList.contains('theme-dive')
+                ? 'text-blue-200'
+                : 'text-gray-600'
+            }`}>
               Add your certifications and log your first dive session to begin tracking your progress
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">

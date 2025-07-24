@@ -56,8 +56,14 @@ const Login = () => {
     });
   };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+return (
+    <div className={`min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 transition-colors ${
+      document.body.classList.contains('theme-dark') 
+        ? 'bg-gray-900' 
+        : document.body.classList.contains('theme-dive')
+        ? 'bg-gradient-to-br from-ocean-deep to-gray-900'
+        : 'bg-gray-50'
+    }`}>
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <div className="mx-auto h-16 w-16 bg-depth-gradient rounded-full flex items-center justify-center">
@@ -71,7 +77,13 @@ const Login = () => {
           </p>
         </div>
 
-        <Card className="p-8">
+<Card className={`p-8 transition-colors ${
+          document.body.classList.contains('theme-dark') 
+            ? 'bg-gray-800 border-gray-700' 
+            : document.body.classList.contains('theme-dive')
+            ? 'bg-ocean-deep border-ocean-mid'
+            : 'bg-white border-gray-200'
+        }`}>
           <form onSubmit={handleSubmit} className="space-y-6">
             <FormField
               label="Email Address"
@@ -111,8 +123,20 @@ const Login = () => {
           </form>
         </Card>
 
-        <Card className="p-6">
-          <h3 className="text-lg font-semibold font-display text-gray-900 mb-4">
+<Card className={`p-6 transition-colors ${
+          document.body.classList.contains('theme-dark') 
+            ? 'bg-gray-800 border-gray-700' 
+            : document.body.classList.contains('theme-dive')
+            ? 'bg-ocean-deep border-ocean-mid'
+            : 'bg-white border-gray-200'
+        }`}>
+          <h3 className={`text-lg font-semibold font-display mb-4 ${
+            document.body.classList.contains('theme-dark') 
+              ? 'text-gray-100' 
+              : document.body.classList.contains('theme-dive')
+              ? 'text-blue-100'
+              : 'text-gray-900'
+          }`}>
             Demo Accounts
           </h3>
           <p className="text-sm text-gray-600 mb-4">

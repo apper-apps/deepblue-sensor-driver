@@ -506,24 +506,48 @@ const tabs = [
     );
 };
 
-  return (
+return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold font-display text-gray-900">Profile Settings</h1>
-          <p className="text-gray-600">Manage your personal information and preferences</p>
+          <h1 className={`text-3xl font-bold font-display transition-colors ${
+            document.body.classList.contains('theme-dark') 
+              ? 'text-gray-100' 
+              : document.body.classList.contains('theme-dive')
+              ? 'text-blue-100'
+              : 'text-gray-900'
+          }`}>Profile Settings</h1>
+          <p className={`transition-colors ${
+            document.body.classList.contains('theme-dark') 
+              ? 'text-gray-300' 
+              : document.body.classList.contains('theme-dive')
+              ? 'text-blue-200'
+              : 'text-gray-600'
+          }`}>Manage your personal information and preferences</p>
         </div>
         {!user?.profileComplete && (
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+          <div className={`border rounded-lg p-3 transition-colors ${
+            document.body.classList.contains('theme-dark') 
+              ? 'bg-amber-900/50 border-amber-700' 
+              : document.body.classList.contains('theme-dive')
+              ? 'bg-amber-900/50 border-amber-600'
+              : 'bg-amber-50 border-amber-200'
+          }`}>
             <div className="flex items-center">
               <ApperIcon name="AlertCircle" size={16} className="text-amber-600 mr-2" />
-              <span className="text-sm text-amber-800">Profile incomplete</span>
+              <span className={`text-sm ${
+                document.body.classList.contains('theme-dark') 
+                  ? 'text-amber-300' 
+                  : document.body.classList.contains('theme-dive')
+                  ? 'text-amber-200'
+                  : 'text-amber-800'
+              }`}>Profile incomplete</span>
             </div>
           </div>
         )}
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-6">
+<div className="flex flex-col lg:flex-row gap-6">
         {/* Tab Navigation */}
         <div className="lg:w-64">
           <nav className="space-y-1">
@@ -533,8 +557,16 @@ const tabs = [
                 onClick={() => setActiveTab(tab.id)}
                 className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                   activeTab === tab.id
-                    ? 'bg-primary-50 text-primary-700 border border-primary-200'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                    ? document.body.classList.contains('theme-dark')
+                      ? 'bg-gray-700 text-blue-300 border border-gray-600'
+                      : document.body.classList.contains('theme-dive')
+                      ? 'bg-ocean-mid text-blue-100 border border-ocean-surface'
+                      : 'bg-primary-50 text-primary-700 border border-primary-200'
+                    : document.body.classList.contains('theme-dark')
+                      ? 'text-gray-300 hover:text-gray-100 hover:bg-gray-700'
+                      : document.body.classList.contains('theme-dive')
+                      ? 'text-blue-200 hover:text-blue-100 hover:bg-ocean-mid/50'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
                 <ApperIcon name={tab.icon} size={16} className="mr-3" />
@@ -545,8 +577,15 @@ const tabs = [
         </div>
 
         {/* Tab Content */}
-<div className="flex-1">
-          <Card className="p-6">
+{/* Tab Content */}
+        <div className="flex-1">
+          <Card className={`p-6 transition-colors ${
+            document.body.classList.contains('theme-dark') 
+              ? 'bg-gray-800 border-gray-700' 
+              : document.body.classList.contains('theme-dive')
+              ? 'bg-ocean-deep border-ocean-mid'
+              : 'bg-white border-gray-200'
+          }`}>
             {activeTab === 'personal' && <PersonalInfoTab />}
             {activeTab === 'emergency' && <EmergencyContactTab />}
             {activeTab === 'safety' && <SafetyInfoTab />}
@@ -554,7 +593,13 @@ const tabs = [
             {activeTab === 'goals' && <GoalsTab />}
             {activeTab === 'diary' && <DiaryTab />}
 
-            <div className="mt-6 pt-6 border-t border-gray-200">
+            <div className={`mt-6 pt-6 border-t transition-colors ${
+              document.body.classList.contains('theme-dark') 
+                ? 'border-gray-700' 
+                : document.body.classList.contains('theme-dive')
+                ? 'border-ocean-mid'
+                : 'border-gray-200'
+            }`}>
               <div className="flex justify-end space-x-3">
                 <Button variant="outline">
                   Cancel

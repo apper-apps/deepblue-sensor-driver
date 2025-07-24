@@ -2,6 +2,7 @@ import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { ThemeProvider, useTheme } from "@/contexts/ThemeContext";
 import Header from "@/components/organisms/Header";
 import Dashboard from "@/components/pages/Dashboard";
 import NewSession from "@/components/pages/NewSession";
@@ -39,8 +40,16 @@ const ProtectedRoute = ({ children, requireAuth = true, allowedRoles = [] }) => 
 };
 
 function AppContent() {
+  const { currentTheme } = useTheme();
+  
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className={`min-h-screen transition-colors duration-300 ${
+      currentTheme === 'dark' 
+        ? 'bg-gray-900' 
+        : currentTheme === 'dive'
+        ? 'bg-gradient-to-br from-ocean-deep to-gray-900'
+        : 'bg-gray-50'
+    }`}>
       <Header />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-20 md:pb-8">
@@ -88,7 +97,7 @@ function AppContent() {
         </Routes>
       </main>
 
-      <ToastContainer
+<ToastContainer
         position="top-right"
         autoClose={3000}
         hideProgressBar={false}
@@ -98,31 +107,20 @@ function AppContent() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="light"
+        theme={currentTheme === 'light' ? 'light' : 'dark'}
         style={{ zIndex: 9999 }}
       />
-</div>
+    </div>
   );
 }
 
 function App() {
   return (
-    <AuthProvider>
-      <AppContent />
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        style={{ zIndex: 9999 }}
-      />
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 
