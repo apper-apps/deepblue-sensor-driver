@@ -2,11 +2,7 @@ import React, { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 import { DiveService } from "@/services/api/diveService";
 import { SessionService } from "@/services/api/sessionService";
-import { SessionService } from "@/services/mockData/users.json";
-import { SessionService } from "@/services/mockData/sessions.json";
-import { SessionService } from "@/services/mockData/dives.json";
 import ApperIcon from "@/components/ApperIcon";
-import Dashboard from "@/components/pages/Dashboard";
 import Card from "@/components/atoms/Card";
 import MetricCard from "@/components/molecules/MetricCard";
 import Error from "@/components/ui/Error";
@@ -189,8 +185,7 @@ let diveTypeComparison = { openWater: 0, pool: 0 };
       }
     }
 
-    Object.values(sessionDiveMap)
-    Object.values(sessionDiveMap)
+Object.values(sessionDiveMap)
       .sort((a, b) => new Date(a.date) - new Date(b.date))
       .forEach(session => {
         const { date, discipline, dives: sessionDives } = session;
