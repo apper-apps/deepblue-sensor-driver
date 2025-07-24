@@ -1,0 +1,188 @@
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import Card from "@/components/atoms/Card";
+import Button from "@/components/atoms/Button";
+import FormField from "@/components/molecules/FormField";
+import DisciplineBadge from "@/components/molecules/DisciplineBadge";
+import ApperIcon from "@/components/ApperIcon";
+import Loading from "@/components/ui/Loading";
+import Error from "@/components/ui/Error";
+import Empty from "@/components/ui/Empty";
+import { SessionService } from "@/services/api/sessionService";
+import { DiveService } from "@/services/api/diveService";
+import { format } from "date-fns";
+
+const SessionList = () => {
+  const [sessions, setSessions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [filter, setFilter] = useState({
+    type: "",
+    discipline: ""
+  });
+
+  useEffect(() => {
+    loadSessions();
+  }, []);
+
+  const loadSessions = async () => {
+    try {
+      setLoading(true);
+      setError("");
+      const sessionsData = await SessionService.getAll();
+      
+      // Get dive counts for each session
+      const sessionsWithStats = await Promise.all(
+        sessionsData.map(async (session) => {
+          const sessionDives = await DiveService.getBySessionId(session.Id);
+          const bestValue = getBestValue(sessionDives, session);
+          
+          return {
+            ...session,
+            diveCount: sessionDives.length,
+            bestValue
+          };
+        })
+      );
+      
+      setSessions(sessionsWithStats);
+    } catch (err) {
+      setError("Failed to load sessions");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getBestValue = (dives, session) => {
+    if (dives.length === 0) return null;
+    
+    if (session.type === "open_water") {
+      const maxDepth = Math.max(...dives.map(d => d.depth || 0));
+      return `${maxDepth}m`;
+    } else if (session.discipline === "STA") {
+      const maxTime = Math.max(...dives.map(d => d.time || 0));
+      return `${maxTime}s`;
+    } else {
+      const maxDistance = Math.max(...dives.map(d => d.distance || 0));
+      return `${maxDistance}m`;
+    }
+  };
+
+  const filteredSessions = sessions.filter(session => {
+    if (filter.type && session.type !== filter.type) return false;
+    if (filter.discipline && session.discipline !== filter.discipline) return false;
+    return true;
+  });
+
+  const disciplineOptions = {
+    open_water: ["CWT", "CWTB", "CNF"],
+    pool: ["STA", "DYN", "DYNB", "DNF"]
+  };
+
+  if (loading) return <Loading />;
+  if (error) return <Error message={error} onRetry={loadSessions} />;
+  if (sessions.length === 0) return <Empty message="No dive sessions recorded yet" />;
+
+  return (
+    <div className="space-y-6">
+      {/* Filters */}
+      <Card className="p-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <FormField
+            label="Session Type"
+            type="select"
+            value={filter.type}
+            onChange={(e) => setFilter(prev => ({ ...prev, type: e.target.value, discipline: "" }))}
+          >
+            <option value="">All Types</option>
+            <option value="open_water">Open Water</option>
+            <option value="pool">Pool</option>
+          </FormField>
+          
+          <FormField
+            label="Discipline"
+            type="select"
+            value={filter.discipline}
+            onChange={(e) => setFilter(prev => ({ ...prev, discipline: e.target.value }))}
+            disabled={!filter.type}
+          >
+            <option value="">All Disciplines</option>
+            {filter.type && disciplineOptions[filter.type]?.map(discipline => (
+              <option key={discipline} value={discipline}>{discipline}</option>
+            ))}
+          </FormField>
+          
+          <div className="flex items-end">
+            <Button
+              variant="outline"
+              onClick={() => setFilter({ type: "", discipline: "" })}
+              className="w-full"
+            >
+              <ApperIcon name="X" size={16} className="mr-2" />
+              Clear Filters
+            </Button>
+          </div>
+        </div>
+      </Card>
+
+      {/* Session List */}
+      {filteredSessions.length === 0 ? (
+        <Empty message="No sessions match your filters" />
+      ) : (
+        <div className="space-y-4">
+          {filteredSessions.map((session) => (
+            <Card key={session.Id} className="p-6 hover:shadow-lg transition-shadow">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center space-x-3 mb-2">
+                    <h3 className="text-lg font-semibold font-display text-gray-900">
+                      {format(new Date(session.date), "MMM d, yyyy")}
+                    </h3>
+                    <DisciplineBadge 
+                      discipline={session.discipline} 
+                      type={session.type} 
+                    />
+                  </div>
+                  
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+                    <div className="flex items-center">
+                      <ApperIcon name="MapPin" size={16} className="mr-1" />
+                      {session.location || "No location"}
+                    </div>
+                    <div className="flex items-center">
+                      <ApperIcon name="Target" size={16} className="mr-1" />
+                      {session.diveCount} dives
+                    </div>
+                    {session.bestValue && (
+                      <div className="flex items-center">
+                        <ApperIcon name="TrendingUp" size={16} className="mr-1" />
+                        Best: {session.bestValue}
+                      </div>
+                    )}
+                  </div>
+                  
+                  {session.notes && (
+                    <p className="mt-2 text-sm text-gray-600 line-clamp-2">
+                      {session.notes}
+                    </p>
+                  )}
+                </div>
+                
+                <div className="mt-4 sm:mt-0 sm:ml-4">
+                  <Link to={`/session/${session.Id}`}>
+                    <Button variant="outline" size="sm">
+                      <ApperIcon name="Eye" size={16} className="mr-2" />
+                      View Details
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default SessionList;

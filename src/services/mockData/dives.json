@@ -1,0 +1,119 @@
+[
+  {
+    "Id": 1,
+    "sessionId": 1,
+    "depth": 25,
+    "distance": null,
+    "time": null,
+    "timestamp": "2024-01-15T09:15:00Z",
+    "notes": "Warm-up dive, felt comfortable"
+  },
+  {
+    "Id": 2,
+    "sessionId": 1,
+    "depth": 32,
+    "distance": null,
+    "time": null,
+    "timestamp": "2024-01-15T09:45:00Z",
+    "notes": "Good equalization, steady descent"
+  },
+  {
+    "Id": 3,
+    "sessionId": 1,
+    "depth": 38,
+    "distance": null,
+    "time": null,
+    "timestamp": "2024-01-15T10:15:00Z",
+    "notes": "Personal best! Perfect dive"
+  },
+  {
+    "Id": 4,
+    "sessionId": 2,
+    "depth": null,
+    "distance": null,
+    "time": 180,
+    "timestamp": "2024-01-12T14:30:00Z",
+    "notes": "First attempt, good baseline"
+  },
+  {
+    "Id": 5,
+    "sessionId": 2,
+    "depth": null,
+    "distance": null,
+    "time": 195,
+    "timestamp": "2024-01-12T15:00:00Z",
+    "notes": "Better relaxation, slight improvement"
+  },
+  {
+    "Id": 6,
+    "sessionId": 2,
+    "depth": null,
+    "distance": null,
+    "time": 210,
+    "timestamp": "2024-01-12T15:30:00Z",
+    "notes": "Excellent session! New personal record"
+  },
+  {
+    "Id": 7,
+    "sessionId": 3,
+    "depth": 20,
+    "distance": null,
+    "time": null,
+    "timestamp": "2024-01-10T11:00:00Z",
+    "notes": "Adjusting to no fins technique"
+  },
+  {
+    "Id": 8,
+    "sessionId": 3,
+    "depth": 24,
+    "distance": null,
+    "time": null,
+    "timestamp": "2024-01-10T11:30:00Z",
+    "notes": "Better technique, more confident"
+  },
+  {
+    "Id": 9,
+    "sessionId": 4,
+    "depth": null,
+    "distance": 75,
+    "time": null,
+    "timestamp": "2024-01-08T16:00:00Z",
+    "notes": "Good start, working on rhythm"
+  },
+  {
+    "Id": 10,
+    "sessionId": 4,
+    "depth": null,
+    "distance": 100,
+    "time": null,
+    "timestamp": "2024-01-08T16:30:00Z",
+    "notes": "Improved distance, steady pace"
+  },
+  {
+    "Id": 11,
+    "sessionId": 4,
+    "depth": null,
+    "distance": 125,
+    "time": null,
+    "timestamp": "2024-01-08T17:00:00Z",
+    "notes": "Great progress! Feeling strong in the turns"
+  },
+  {
+    "Id": 12,
+    "sessionId": 5,
+    "depth": 28,
+    "distance": null,
+    "time": null,
+    "timestamp": "2024-01-05T08:30:00Z",
+    "notes": "Testing new bifins, different feel"
+  },
+  {
+    "Id": 13,
+    "sessionId": 5,
+    "depth": 35,
+    "distance": null,
+    "time": null,
+    "timestamp": "2024-01-05T09:00:00Z",
+    "notes": "Getting used to bifins power, good depth"
+  }
+]

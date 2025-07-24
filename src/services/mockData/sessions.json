@@ -1,0 +1,42 @@
+[
+  {
+    "Id": 1,
+    "date": "2024-01-15",
+    "type": "open_water",
+    "discipline": "CWT",
+    "location": "Blue Hole, Dahab",
+    "notes": "Perfect conditions, calm seas and excellent visibility. Water temperature 24°C. Feeling strong today."
+  },
+  {
+    "Id": 2,
+    "date": "2024-01-12",
+    "type": "pool",
+    "discipline": "STA",
+    "location": "Aquatic Center Pool",
+    "notes": "Working on relaxation techniques. Pool temperature ideal at 28°C."
+  },
+  {
+    "Id": 3,
+    "date": "2024-01-10",
+    "type": "open_water",
+    "discipline": "CNF",
+    "location": "Dean's Blue Hole",
+    "notes": "Challenging session with slight current. Good for technique practice."
+  },
+  {
+    "Id": 4,
+    "date": "2024-01-08",
+    "type": "pool",
+    "discipline": "DYN",
+    "location": "50m Competition Pool",
+    "notes": "Distance training session. Focused on efficient finning technique and turn mechanics."
+  },
+  {
+    "Id": 5,
+    "date": "2024-01-05",
+    "type": "open_water",
+    "discipline": "CWTB",
+    "location": "Red Sea, Sharm El Sheikh",
+    "notes": "Bifins training day. Working on power and efficiency with new fins."
+  }
+]
