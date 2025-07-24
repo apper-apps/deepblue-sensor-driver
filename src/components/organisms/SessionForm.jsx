@@ -50,11 +50,12 @@ const SessionForm = () => {
     }
   };
 
-  const disciplineOptions = {
+const disciplineOptions = {
     open_water: [
       { value: "CWT", label: "Constant Weight (CWT)" },
       { value: "CWTB", label: "Constant Weight Bifins (CWTB)" },
-      { value: "CNF", label: "Constant No Fins (CNF)" }
+      { value: "CNF", label: "Constant No Fins (CNF)" },
+      { value: "FIM", label: "Free Immersion (FIM)" }
     ],
     pool: [
       { value: "STA", label: "Static Apnea (STA)" },

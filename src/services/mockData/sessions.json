@@ -56,7 +56,19 @@
     "instructorId": 1,
     "buddyName": "Elena Rodriguez",
     "safetyNotes": "New equipment testing with instructor supervision. All safety checks completed.",
+"safetyNotes": "New equipment testing with instructor supervision. All safety checks completed.",
     "notes": "Bifins training day. Working on power and efficiency with new fins.",
     "userId": 3
+  },
+  {
+    "Id": 6,
+    "date": "2024-01-03",
+    "type": "open_water",
+    "discipline": "FIM",
+    "location": "Crystal Bay, Nusa Penida",
+    "instructorId": 1,
+    "buddyName": "Lisa Chen",
+    "safetyNotes": "Perfect conditions for FIM training. Safety rope and surface support active.",
+    "notes": "First FIM session of the year. Working on rope technique and rhythm. Water crystal clear.",
+    "userId": 4
   }
-]

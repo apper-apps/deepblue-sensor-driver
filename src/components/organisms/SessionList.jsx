@@ -74,11 +74,10 @@ const SessionList = () => {
     return true;
   });
 
-  const disciplineOptions = {
-    open_water: ["CWT", "CWTB", "CNF"],
+const disciplineOptions = {
+    open_water: ["CWT", "CWTB", "CNF", "FIM"],
     pool: ["STA", "DYN", "DYNB", "DNF"]
   };
-
   if (loading) return <Loading />;
   if (error) return <Error message={error} onRetry={loadSessions} />;
   if (sessions.length === 0) return <Empty message="No dive sessions recorded yet" />;

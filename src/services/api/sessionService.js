@@ -19,10 +19,11 @@ class SessionServiceClass {
     return { ...session };
   }
 
-  async create(sessionData) {
+async create(sessionData) {
     await this.delay();
     const newSession = {
       Id: Math.max(...this.sessions.map(s => s.Id)) + 1,
+      photos: [],
       ...sessionData
     };
     this.sessions.push(newSession);
