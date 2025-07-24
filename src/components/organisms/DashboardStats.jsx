@@ -3,6 +3,7 @@ import Chart from "react-apexcharts";
 import { DiveService } from "@/services/api/diveService";
 import { SessionService } from "@/services/api/sessionService";
 import ApperIcon from "@/components/ApperIcon";
+import Dashboard from "@/components/pages/Dashboard";
 import Card from "@/components/atoms/Card";
 import MetricCard from "@/components/molecules/MetricCard";
 import Error from "@/components/ui/Error";
@@ -33,15 +34,15 @@ const [stats, setStats] = useState({
       pool: {
         DYN: 0,
         DYNB: 0,
-        DNF: 0,
-        STA: 0
+STA: 0
       }
     },
-mostRecordedDiscipline: {
+    mostRecordedDiscipline: {
       name: '',
       count: 0,
       type: ''
     },
+    favoriteDiveBuddy: {
     favoriteDiveBuddy: {
       name: '',
       count: 0
@@ -963,13 +964,14 @@ return (
         {stats.favoriteDiveSite.name && (
           <MetricCard
             title="Most Favorite Dive Site"
-            value={stats.favoriteDiveSite.name}
+value={stats.favoriteDiveSite.name}
             subtitle={`${stats.favoriteDiveSite.count} sessions recorded`}
             icon="MapPin"
             className="bg-cyan-50 border-cyan-200"
           />
         )}
-{/* 8. My Top Dive State Of Mind */}
+        
+        {/* My Top Dive State Of Mind */}
         {stats.topMood.mood && (
           <MetricCard
             title="My Top Dive State Of Mind"
@@ -1047,13 +1049,9 @@ return (
             </div>
           </div>
         </Card>
-
-        {/* Open Water Bar Chart */}
+{/* Open Water and Pool Bar Charts */}
         <div className="grid grid-cols-1 gap-6">
           {renderOpenWaterBarChart()}
-
-        {/* Total Dives by Pool Discipline in Horizontal bar chart */}
-        <div className="grid grid-cols-1 gap-6">
           {renderPoolBarChart()}
         </div>
       </div>
