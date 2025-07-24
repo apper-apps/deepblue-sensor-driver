@@ -59,13 +59,13 @@ const loadInstructors = async () => {
 const disciplineOptions = {
     open_water: [
       { value: "CWT", label: "Constant Weight (CWT)" },
-      { value: "CWTB", label: "Constant Weight Bifins (CWTB)" },
-      { value: "CNF", label: "Constant No Fins (CNF)" },
+      { value: "CWTB", label: "Constant Weight with BI-fins (CWTB)" },
+      { value: "CNF", label: "Constant Weight No Fins (CNF)" },
       { value: "FIM", label: "Free Immersion (FIM)" }
     ],
     pool: [
       { value: "STA", label: "Static Apnea (STA)" },
-      { value: "DYN", label: "Dynamic Apnea (DYN)" },
+      { value: "DYN", label: "Dynamic With Fins (DYN)" },
       { value: "DYNB", label: "Dynamic Bifins (DYNB)" },
       { value: "DNF", label: "Dynamic No Fins (DNF)" }
     ]
@@ -351,12 +351,12 @@ value={currentDive.depth}
           </div>
         )}
 
-        <div className="grid grid-cols-1 gap-4 mt-4">
+<div className="grid grid-cols-1 gap-4 mt-4">
           <FormField
-            label="Safety Notes"
+            label="Dive Notes"
             value={sessionData.safetyNotes}
             onChange={(e) => handleSessionChange("safetyNotes", e.target.value)}
-            placeholder="Safety protocols, equipment used, etc."
+            placeholder="Key takeaways, purpose of dive, other observations like rare marine encounters or experience."
             rows={2}
           />
         </div>
@@ -414,8 +414,8 @@ value={currentDive.depth}
               min="0"
             />
             
-            <FormField
-              label="Weather"
+<FormField
+              label="Weather Condition"
               type="select"
               value={sessionData.weather}
               onChange={(e) => handleSessionChange("weather", e.target.value)}
@@ -443,8 +443,8 @@ value={currentDive.depth}
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-            <FormField
-              label="Current Strength"
+<FormField
+              label="Water Current Strength"
               type="select"
               value={sessionData.currentStrength}
               onChange={(e) => handleSessionChange("currentStrength", e.target.value)}
@@ -467,9 +467,9 @@ value={currentDive.depth}
           </div>
 
           {/* Mood Log */}
-          <div className="mt-4">
+<div className="mt-4">
             <FormField
-              label="How was your dive?"
+              label="Dive Mood (How was your dive?)"
               type="select"
               value={sessionData.moodLog}
               onChange={(e) => handleSessionChange("moodLog", e.target.value)}

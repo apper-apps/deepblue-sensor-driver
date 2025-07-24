@@ -33,8 +33,8 @@ const [loading, setLoading] = useState(true);
     }
   }, [user]);
 
-  const handleAddCertification = async () => {
-    if (!newCert.organization || !newCert.level || !newCert.issueDate) {
+const handleAddCertification = async () => {
+    if (!newCert.organization || !newCert.level || !newCert.issueDate || !newCert.certificateNumber) {
       toast.error('Please fill in required fields');
       return;
     }
@@ -166,18 +166,19 @@ const [loading, setLoading] = useState(true);
             >
               <option value="">Select organization</option>
               <option value="AIDA">AIDA</option>
+              <option value="Apnea Total">Apnea Total</option>
               <option value="CMAS">CMAS</option>
               <option value="Molchanovs">Molchanovs</option>
-              <option value="Other">Other</option>
               <option value="PADI">PADI</option>
+              <option value="Raid Freediving">Raid Freediving</option>
               <option value="SSI">SSI</option>
             </FormField>
 
-            <FormField
+<FormField
               label="Certification Level"
               value={newCert.level}
               onChange={(e) => setNewCert(prev => ({ ...prev, level: e.target.value }))}
-              placeholder="e.g., AIDA 2, Advanced Freediver"
+              placeholder="e.g. Wave 1, AIDA 1, PADI Freediver, etc."
               required
             />
 
@@ -197,10 +198,11 @@ const [loading, setLoading] = useState(true);
             />
 
 <FormField
-              label="Certificate Number"
+              label="Certification Number"
               value={newCert.certificateNumber}
               onChange={(e) => setNewCert(prev => ({ ...prev, certificateNumber: e.target.value }))}
               className="md:col-span-2"
+              required
             />
 
             <FormField
