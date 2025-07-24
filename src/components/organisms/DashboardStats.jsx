@@ -1,11 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
-import MetricCard from "@/components/molecules/MetricCard";
-import Card from "@/components/atoms/Card";
-import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
-import { SessionService } from "@/services/api/sessionService";
 import { DiveService } from "@/services/api/diveService";
+import { SessionService } from "@/services/api/sessionService";
+import { SessionService } from "@/services/mockData/users.json";
+import { SessionService } from "@/services/mockData/sessions.json";
+import { SessionService } from "@/services/mockData/dives.json";
+import ApperIcon from "@/components/ApperIcon";
+import Dashboard from "@/components/pages/Dashboard";
+import Card from "@/components/atoms/Card";
+import MetricCard from "@/components/molecules/MetricCard";
+import Error from "@/components/ui/Error";
+import Loading from "@/components/ui/Loading";
 const DashboardStats = () => {
 const [stats, setStats] = useState({
     totalDives: 0,
@@ -48,6 +53,20 @@ mostRecordedDiscipline: {
     favoriteDiveSite: {
       name: '',
       count: 0
+    },
+    moodStats: {
+      very_pleasant: 0,
+      pleasant: 0,
+      slightly_pleasant: 0,
+      neutral: 0,
+      slightly_unpleasant: 0,
+      unpleasant: 0,
+      very_unpleasant: 0
+    },
+    topMood: {
+      mood: '',
+      count: 0,
+      percentage: 0
     }
   });
   const [loading, setLoading] = useState(true);
@@ -89,6 +108,9 @@ const loadStats = async () => {
 
 // Calculate progress data and chart statistics
       const chartData = calculateChartData(sessions, allDives);
+      
+      // Calculate mood statistics
+      const moodStats = calculateMoodStats(sessions);
 
 setStats({
         totalDives: allDives.length,
@@ -96,7 +118,8 @@ setStats({
         maxDistance,
         maxTime,
         recentSessions,
-        ...chartData
+        ...chartData,
+        ...moodStats
       });
     } catch (err) {
       setError("Failed to load statistics");
@@ -246,6 +269,135 @@ return {
       favoriteDiveBuddy,
       favoriteDiveSite
     };
+};
+
+  const calculateMoodStats = (sessions) => {
+    const moodStats = {
+      very_pleasant: 0,
+      pleasant: 0,
+      slightly_pleasant: 0,
+      neutral: 0,
+      slightly_unpleasant: 0,
+      unpleasant: 0,
+      very_unpleasant: 0
+    };
+
+    let totalWithMood = 0;
+    sessions.forEach(session => {
+      if (session.moodLog && moodStats.hasOwnProperty(session.moodLog)) {
+        moodStats[session.moodLog]++;
+        totalWithMood++;
+      }
+    });
+
+    let topMood = { mood: '', count: 0, percentage: 0 };
+    for (const [mood, count] of Object.entries(moodStats)) {
+      if (count > topMood.count) {
+        topMood = {
+          mood,
+          count,
+          percentage: totalWithMood > 0 ? Math.round((count / totalWithMood) * 100) : 0
+        };
+      }
+    }
+
+    return { moodStats, topMood };
+  };
+
+  const getMoodIcon = (mood) => {
+    const moodIcons = {
+      very_pleasant: '😊',
+      pleasant: '😌',
+      slightly_pleasant: '🙂',
+      neutral: '😐',
+      slightly_unpleasant: '😕',
+      unpleasant: '😞',
+      very_unpleasant: '😢'
+    };
+    return moodIcons[mood] || '😐';
+  };
+
+  const getMoodLabel = (mood) => {
+    const labels = {
+      very_pleasant: 'Very Pleasant',
+      pleasant: 'Pleasant',
+      slightly_pleasant: 'Slightly Pleasant',
+      neutral: 'Neutral',
+      slightly_unpleasant: 'Slightly Unpleasant',
+      unpleasant: 'Unpleasant',
+      very_unpleasant: 'Very Unpleasant'
+    };
+    return labels[mood] || 'No Data';
+  };
+
+  const renderMoodPieChart = () => {
+    const moodData = Object.entries(stats.moodStats).filter(([_, count]) => count > 0);
+    
+    if (moodData.length === 0) {
+      return (
+        <Card className="p-6">
+          <h3 className="text-lg font-semibold font-display text-gray-900 mb-4">
+            Dive Moods Recorded
+          </h3>
+          <div className="flex items-center justify-center h-64 text-gray-500">
+            <div className="text-center">
+              <div className="text-4xl mb-2">😐</div>
+              <p>No mood data recorded yet</p>
+            </div>
+          </div>
+        </Card>
+      );
+    }
+
+    const total = moodData.reduce((sum, [_, count]) => sum + count, 0);
+    const chartData = {
+      series: moodData.map(([_, count]) => count),
+      options: {
+        chart: {
+          type: 'pie',
+          height: 300
+        },
+        labels: moodData.map(([mood, _]) => getMoodLabel(mood)),
+        colors: ['#10b981', '#22c55e', '#84cc16', '#eab308', '#f59e0b', '#ef4444', '#dc2626'],
+        legend: {
+          position: 'bottom',
+          fontSize: '12px'
+        },
+        tooltip: {
+          y: {
+            formatter: function(value) {
+              const percentage = ((value / total) * 100).toFixed(1);
+              return `${value} sessions (${percentage}%)`;
+            }
+          }
+        },
+        responsive: [{
+          breakpoint: 768,
+          options: {
+            chart: {
+              height: 250
+            },
+            legend: {
+              fontSize: '10px'
+            }
+          }
+        }]
+      }
+    };
+
+    return (
+      <Card className="p-6">
+        <h3 className="text-lg font-semibold font-display text-gray-900 mb-4">
+          Dive Moods Recorded
+        </h3>
+        <Chart
+          options={chartData.options}
+          series={chartData.series}
+          type="pie"
+          height={300}
+        />
+      </Card>
+    );
   };
 
   const formatTime = (seconds) => {
@@ -822,8 +974,18 @@ return (
             className="bg-cyan-50 border-cyan-200"
           />
         )}
+{/* 8. My Top Dive State Of Mind */}
+        {stats.topMood.mood && (
+          <MetricCard
+            title="My Top Dive State Of Mind"
+            value={`${getMoodIcon(stats.topMood.mood)} ${getMoodLabel(stats.topMood.mood)}`}
+            subtitle={`${stats.topMood.count} sessions (${stats.topMood.percentage}%)`}
+            icon="Heart"
+            className="bg-pink-50 border-pink-200"
+          />
+        )}
         
-        {/* 8. Recent Activity */}
+        {/* 9. Recent Activity */}
         <MetricCard
           title="Recent Activity"
           value={stats.recentSessions.length}
@@ -841,10 +1003,59 @@ return (
         </div>
 
         {/* Dive Type Distribution */}
+{/* Dive Type Distribution and Mood Analytics */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {renderPieChart()}
-          {renderOpenWaterBarChart()}
+          {renderMoodPieChart()}
         </div>
+        
+        {/* Goals Dashboard - Visual Board */}
+        <Card className="p-6">
+          <h3 className="text-lg font-semibold font-display text-gray-900 mb-4">
+            Goals Dashboard - Visual Board
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200">
+              <div className="flex items-center mb-2">
+                <ApperIcon name="Target" size={20} className="text-blue-600 mr-2" />
+                <h4 className="font-semibold text-blue-900">Depth Goals</h4>
+              </div>
+              <p className="text-sm text-blue-700 mb-2">Target: 50m CWT</p>
+              <div className="w-full bg-blue-200 rounded-full h-2">
+                <div className="bg-blue-600 h-2 rounded-full" style={{width: `${Math.min((stats.maxDepth / 50) * 100, 100)}%`}}></div>
+              </div>
+              <p className="text-xs text-blue-600 mt-1">Current: {stats.maxDepth}m ({Math.round((stats.maxDepth / 50) * 100)}%)</p>
+            </div>
+            
+            <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-lg border border-purple-200">
+              <div className="flex items-center mb-2">
+                <ApperIcon name="ArrowRight" size={20} className="text-purple-600 mr-2" />
+                <h4 className="font-semibold text-purple-900">Distance Goals</h4>
+              </div>
+              <p className="text-sm text-purple-700 mb-2">Target: 200m DYN</p>
+              <div className="w-full bg-purple-200 rounded-full h-2">
+                <div className="bg-purple-600 h-2 rounded-full" style={{width: `${Math.min((stats.maxDistance / 200) * 100, 100)}%`}}></div>
+              </div>
+              <p className="text-xs text-purple-600 mt-1">Current: {stats.maxDistance}m ({Math.round((stats.maxDistance / 200) * 100)}%)</p>
+            </div>
+            
+            <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg border border-green-200">
+              <div className="flex items-center mb-2">
+                <ApperIcon name="Clock" size={20} className="text-green-600 mr-2" />
+                <h4 className="font-semibold text-green-900">Time Goals</h4>
+              </div>
+              <p className="text-sm text-green-700 mb-2">Target: 5:00 STA</p>
+              <div className="w-full bg-green-200 rounded-full h-2">
+                <div className="bg-green-600 h-2 rounded-full" style={{width: `${Math.min((stats.maxTime / 300) * 100, 100)}%`}}></div>
+              </div>
+              <p className="text-xs text-green-600 mt-1">Current: {formatTime(stats.maxTime)} ({Math.round((stats.maxTime / 300) * 100)}%)</p>
+            </div>
+          </div>
+        </Card>
+
+        {/* Open Water Bar Chart */}
+        <div className="grid grid-cols-1 gap-6">
+          {renderOpenWaterBarChart()}
 
         {/* Total Dives by Pool Discipline in Horizontal bar chart */}
         <div className="grid grid-cols-1 gap-6">

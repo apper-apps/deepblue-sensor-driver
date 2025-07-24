@@ -12,7 +12,7 @@ export const useTheme = () => {
 
 const themes = {
   light: {
-    name: 'White Mode',
+    name: 'Daylight Mode',
     value: 'light',
     icon: 'Sun',
     description: 'Clean and bright interface'
@@ -28,6 +28,12 @@ const themes = {
     value: 'dive', 
     icon: 'Waves',
     description: 'Ocean-inspired depths'
+  },
+  sunset: {
+    name: 'Sunset Mode',
+    value: 'sunset',
+    icon: 'Sunset',
+    description: 'Warm sunset colors'
   }
 };
 
@@ -61,14 +67,15 @@ export const ThemeProvider = ({ children }) => {
     }
   };
 
-  const value = {
+const value = {
     currentTheme,
     themes,
     switchTheme,
     isLoading,
     isDark: currentTheme === 'dark',
     isDive: currentTheme === 'dive',
-    isLight: currentTheme === 'light'
+    isLight: currentTheme === 'light',
+    isSunset: currentTheme === 'sunset'
   };
 
   if (isLoading) {

@@ -10,36 +10,52 @@ theme: {
         display: ['"Plus Jakarta Sans"', 'sans-serif'],
         body: ['Inter', 'sans-serif'],
       },
-      colors: {
+colors: {
+        // Daylight Mode Colors
         primary: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
+          50: '#e6f7f7',
+          100: '#b3e8e6',
+          200: '#80d9d5',
+          300: '#4dcac4',
+          400: '#1abbb3',
+          500: '#03A6A1',
+          600: '#028581',
+          700: '#026461',
+          800: '#014341',
+          900: '#012220',
         },
-        ocean: {
-          surface: '#38bdf8',
-          mid: '#0ea5e9',
-          deep: '#0369a1',
-        },
-        // Dark theme colors
+        // Dark Mode Colors  
         dark: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          200: '#e2e8f0',
-          300: '#cbd5e1',
-          400: '#94a3b8',
-          500: '#64748b',
-          600: '#475569',
-          700: '#334155',
-          800: '#1e293b',
-          900: '#0f172a',
+          50: '#f5f5f5',
+          100: '#eeeeee',
+          200: '#e0e0e0',
+          300: '#bdbdbd',
+          400: '#9e9e9e',
+          500: '#757575',
+          600: '#616161',
+          700: '#424242',
+          800: '#393E46',
+          900: '#222831',
+        },
+        // Dive Mode Colors
+        ocean: {
+          surface: '#F1F1F6',
+          mid: '#E1CCEC',
+          deep: '#BE9FE1',
+          deeper: '#C9B6E4'
+        },
+        // Sunset Mode Colors
+        sunset: {
+          50: '#feffc4',
+          100: '#ffde63',
+          200: '#ffbc4c',
+          300: '#ff9933',
+          400: '#ff7f1a',
+          500: '#799EFF',
+          600: '#6889e6',
+          700: '#5774cc',
+          800: '#465fb3',
+          900: '#354a99',
         }
       },
       backgroundImage: {

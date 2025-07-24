@@ -342,8 +342,8 @@ const session = await SessionService.create({
               ))}
             </FormField>
             
-            <FormField
-              label="Buddy Name"
+<FormField
+              label="Dive Buddy"
               value={sessionData.buddyName}
               onChange={(e) => handleSessionChange("buddyName", e.target.value)}
               placeholder="Safety buddy or diving partner"
@@ -379,7 +379,7 @@ const session = await SessionService.create({
             {renderDiveInput()}
           </div>
           
-          <div className="mt-4">
+<div className="mt-4 flex justify-end">
             <Button onClick={addDive} className="w-full md:w-auto">
               <ApperIcon name="Plus" size={16} className="mr-2" />
               Add Dive

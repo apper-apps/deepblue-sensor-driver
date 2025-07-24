@@ -19,7 +19,7 @@
   padding: 16px;
 }
 
-/* Light theme toasts */
+/* Daylight theme toasts */
 .theme-light .Toastify__toast--success {
   @apply bg-green-50 text-green-800 border border-green-200;
 }
@@ -70,6 +70,23 @@
   @apply bg-yellow-900 text-yellow-200 border border-yellow-600;
 }
 
+/* Sunset theme toasts */
+.theme-sunset .Toastify__toast--success {
+  @apply bg-green-50 text-green-800 border border-green-200;
+}
+
+.theme-sunset .Toastify__toast--error {
+  @apply bg-red-50 text-red-800 border border-red-200;
+}
+
+.theme-sunset .Toastify__toast--info {
+  @apply bg-orange-50 text-orange-800 border border-orange-200;
+}
+
+.theme-sunset .Toastify__toast--warning {
+  @apply bg-yellow-50 text-yellow-800 border border-yellow-200;
+}
+
 .Toastify__progress-bar {
   @apply bg-primary-500;
 }
@@ -82,4 +99,10 @@
 /* Dive theme progress bar */
 .theme-dive .Toastify__progress-bar {
   @apply bg-ocean-surface;
+}
+
+/* Sunset theme progress bar */
+.theme-sunset .Toastify__progress-bar {
+  @apply bg-orange-400;
+}
 }

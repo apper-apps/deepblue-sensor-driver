@@ -42,12 +42,14 @@ const ProtectedRoute = ({ children, requireAuth = true, allowedRoles = [] }) => 
 function AppContent() {
   const { currentTheme } = useTheme();
   
-  return (
+return (
     <div className={`min-h-screen transition-colors duration-300 ${
       currentTheme === 'dark' 
         ? 'bg-gray-900' 
         : currentTheme === 'dive'
         ? 'bg-gradient-to-br from-ocean-deep to-gray-900'
+        : currentTheme === 'sunset'
+        ? 'bg-gradient-to-br from-orange-100 to-yellow-100'
         : 'bg-gray-50'
     }`}>
       <Header />
@@ -107,7 +109,7 @@ function AppContent() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme={currentTheme === 'light' ? 'light' : 'dark'}
+        theme={currentTheme === 'light' || currentTheme === 'sunset' ? 'light' : 'dark'}
         style={{ zIndex: 9999 }}
       />
     </div>
