@@ -24,6 +24,11 @@ async create(sessionData) {
     const newSession = {
       Id: Math.max(...this.sessions.map(s => s.Id)) + 1,
       photos: [],
+      diveDuration: null,
+      weather: "",
+      waveCondition: "",
+      currentStrength: "",
+      waterVisibility: null,
       ...sessionData
     };
     this.sessions.push(newSession);

@@ -15,7 +15,7 @@ import { format } from "date-fns";
 const SessionForm = () => {
   const navigate = useNavigate();
   const { user, isInstructor } = useAuth();
-  const [sessionData, setSessionData] = useState({
+const [sessionData, setSessionData] = useState({
     date: format(new Date(), "yyyy-MM-dd"),
     type: "",
     discipline: "",
@@ -23,7 +23,12 @@ const SessionForm = () => {
     instructorId: "",
     buddyName: "",
     safetyNotes: "",
-    notes: ""
+    notes: "",
+    diveDuration: "",
+    weather: "",
+    waveCondition: "",
+    currentStrength: "",
+    waterVisibility: ""
   });
   
   const [dives, setDives] = useState([]);
@@ -144,6 +149,11 @@ try {
         buddyName: sessionData.buddyName,
         safetyNotes: sessionData.safetyNotes,
         notes: sessionData.notes,
+        diveDuration: sessionData.diveDuration ? parseFloat(sessionData.diveDuration) : null,
+        weather: sessionData.weather || "",
+        waveCondition: sessionData.waveCondition || "",
+        currentStrength: sessionData.currentStrength || "",
+        waterVisibility: sessionData.waterVisibility ? parseFloat(sessionData.waterVisibility) : null,
         userId: user.Id
       });
 
@@ -272,9 +282,83 @@ try {
               label="Location"
               value={sessionData.location}
               onChange={(e) => handleSessionChange("location", e.target.value)}
-              placeholder="Enter dive location"
-/>
+placeholder="Enter dive location"
+            />
           </div>
+        )}
+
+        {/* Additional Session Information (Optional) */}
+        {sessionData.type && sessionData.discipline && (
+          <>
+            <div className="mt-6 pt-4 border-t border-gray-200">
+              <h3 className="text-md font-medium text-gray-900 mb-4">
+                Additional Information (Optional)
+              </h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <FormField
+                  label="Dive Duration (minutes)"
+                  type="number"
+                  value={sessionData.diveDuration}
+                  onChange={(e) => handleSessionChange("diveDuration", e.target.value)}
+                  placeholder="Total session duration"
+                  step="1"
+                  min="0"
+                />
+                
+                <FormField
+                  label="Weather"
+                  type="select"
+                  value={sessionData.weather}
+                  onChange={(e) => handleSessionChange("weather", e.target.value)}
+                >
+                  <option value="">Select weather</option>
+                  <option value="sunny">Sunny</option>
+                  <option value="cloudy">Cloudy</option>
+                  <option value="rainy">Rainy</option>
+                  <option value="snow">Snow</option>
+                  <option value="overcast">Overcast</option>
+                </FormField>
+                
+                <FormField
+                  label="Wave Condition"
+                  type="select"
+                  value={sessionData.waveCondition}
+                  onChange={(e) => handleSessionChange("waveCondition", e.target.value)}
+                >
+                  <option value="">Select wave condition</option>
+                  <option value="no_wave">No Wave</option>
+                  <option value="small">Small</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                </FormField>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <FormField
+                  label="Current Strength"
+                  type="select"
+                  value={sessionData.currentStrength}
+                  onChange={(e) => handleSessionChange("currentStrength", e.target.value)}
+                >
+                  <option value="">Select current strength</option>
+                  <option value="small">Small</option>
+                  <option value="medium">Medium</option>
+                  <option value="strong">Strong</option>
+                </FormField>
+                
+                <FormField
+                  label="Water Visibility (meters)"
+                  type="number"
+                  value={sessionData.waterVisibility}
+                  onChange={(e) => handleSessionChange("waterVisibility", e.target.value)}
+                  placeholder="Depth of visibility"
+                  step="0.5"
+                  min="0"
+                />
+              </div>
+            </div>
+          </>
         )}
 
         {/* Instructor and Safety Information */}
