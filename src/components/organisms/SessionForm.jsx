@@ -135,7 +135,12 @@ const disciplineOptions = {
     toast.success("Dive removed");
   };
 
-  const handlePhotoUpload = (e) => {
+const handlePhotoUpload = (e) => {
+    // Add null checks to prevent runtime errors
+    if (!e?.target?.files || e.target.files.length === 0) {
+      return;
+    }
+    
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
