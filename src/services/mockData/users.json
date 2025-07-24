@@ -55,10 +55,124 @@
       "visibility": "public",
       "showContact": true,
       "showCertifications": true
+"preferences": {
+      "visibility": "public",
+      "showContact": true,
+"showCertifications": true
+    },
+    "goals": {
+      "staticMilestones": {
+        "STA_3min": {
+          "title": "Static Apnea 3 Minutes",
+          "discipline": "STA",
+          "target": 180,
+          "current": 120,
+          "unit": "seconds",
+          "category": "confined_water",
+          "priority": "high",
+          "completed": false
+        },
+        "STA_4min": {
+          "title": "Static Apnea 4 Minutes",
+          "discipline": "STA",
+          "target": 240,
+          "current": 120,
+          "unit": "seconds",
+          "category": "confined_water",
+          "priority": "medium",
+          "completed": false
+        }
+      },
+      "dynamicDisciplines": {
+        "DYN_100m": {
+          "title": "Dynamic Apnea 100m",
+          "discipline": "DYN",
+          "target": 100,
+          "current": 75,
+          "unit": "meters",
+          "priority": "high",
+          "completed": false
+        },
+        "DYNB_80m": {
+          "title": "Dynamic Bifins 80m",
+          "discipline": "DYNB",
+          "target": 80,
+          "current": 58,
+          "unit": "meters",
+          "priority": "medium",
+          "completed": false
+        },
+        "DNF_60m": {
+          "title": "Dynamic No Fins 60m",
+          "discipline": "DNF",
+          "target": 60,
+          "current": 45,
+          "unit": "meters",
+          "priority": "low",
+          "completed": false
+        }
+      },
+      "rescueCapability": {
+        "rescue_cert": {
+          "title": "Freediving Rescue Certification",
+          "target": "AIDA Rescue",
+          "current": "In Progress",
+          "priority": "high",
+          "completed": false
+        },
+        "rescue_practical": {
+          "title": "Rescue Scenario Practice",
+          "target": "10 scenarios",
+          "current": "7 scenarios",
+          "priority": "medium",
+          "completed": false
+        }
+      },
+      "certifications": {
+        "instructor_advanced": {
+          "title": "Advanced Instructor Certification",
+          "target": "AIDA Master Instructor",
+          "current": "Completed",
+          "priority": "medium",
+          "completed": true
+        }
+      },
+      "diveSites": {
+        "blue_hole": {
+          "title": "Dive Blue Hole Dahab",
+          "target": "Visit and log dive",
+          "current": "Completed",
+          "priority": "low",
+          "completed": true
+        },
+        "dean_blue_hole": {
+          "title": "Dean's Blue Hole Experience",
+          "target": "Visit Bahamas site",
+          "current": "Planned",
+          "priority": "medium",
+          "completed": false
+        }
+      },
+      "trainingWorkshops": {
+        "competition_prep": {
+          "title": "Competition Preparation Workshop",
+          "target": "Complete 3-day intensive",
+          "current": "Registered",
+          "priority": "high",
+          "completed": false
+        }
+      },
+      "personalGoals": {
+        "youtube_channel": {
+          "title": "Educational YouTube Channel",
+          "target": "100 subscribers",
+          "current": "45 subscribers",
+          "priority": "low",
+          "completed": false
+        }
+      }
     },
     "profileComplete": true
-  },
-  {
     "Id": 2,
     "email": "marco.instructor@deepblue.com",
     "password": "instructor123",
@@ -114,9 +228,107 @@
       "visibility": "public",
       "showContact": true,
       "showCertifications": true
+"showCertifications": true
+    },
+    "goals": {
+      "staticMilestones": {
+        "STA_2min": {
+          "title": "Static Apnea 2 Minutes",
+          "discipline": "STA",
+          "target": 120,
+          "current": 95,
+          "unit": "seconds",
+          "category": "confined_water",
+          "priority": "high",
+          "completed": false
+        },
+        "STA_3min": {
+          "title": "Static Apnea 3 Minutes",
+          "discipline": "STA",
+          "target": 180,
+          "current": 95,
+          "unit": "seconds",
+          "category": "confined_water",
+          "priority": "medium",
+          "completed": false
+        }
+      },
+      "dynamicDisciplines": {
+        "DYN_125m": {
+          "title": "Dynamic Apnea 125m",
+          "discipline": "DYN",
+          "target": 125,
+          "current": 105,
+          "unit": "meters",
+          "priority": "high",
+          "completed": false
+        },
+        "DYNB_100m": {
+          "title": "Dynamic Bifins 100m",
+          "discipline": "DYNB",
+          "target": 100,
+          "current": 85,
+          "unit": "meters",
+          "priority": "medium",
+          "completed": false
+        },
+        "DNF_75m": {
+          "title": "Dynamic No Fins 75m",
+          "discipline": "DNF",
+          "target": 75,
+          "current": 62,
+          "unit": "meters",
+          "priority": "low",
+          "completed": false
+        }
+      },
+      "rescueCapability": {
+        "rescue_training": {
+          "title": "Advanced Rescue Training",
+          "target": "Complete course",
+          "current": "50% complete",
+          "priority": "high",
+          "completed": false
+        }
+      },
+      "certifications": {
+        "instructor_training": {
+          "title": "Instructor Development Course",
+          "target": "AIDA Instructor",
+          "current": "Prerequisites met",
+          "priority": "high",
+          "completed": false
+        }
+      },
+      "diveSites": {
+        "mediterranean_sites": {
+          "title": "Mediterranean Training Sites",
+          "target": "Visit 5 different sites",
+          "current": "3 sites visited",
+          "priority": "medium",
+          "completed": false
+        }
+      },
+      "trainingWorkshops": {
+        "depth_training": {
+          "title": "Advanced Depth Training",
+          "target": "Complete workshop",
+          "current": "Completed",
+          "priority": "medium",
+          "completed": true
+        }
+      },
+      "personalGoals": {
+        "coaching_program": {
+          "title": "Develop Coaching Program",
+          "target": "Launch program",
+          "current": "In development",
+          "priority": "high",
+          "completed": false
+        }
+      }
     },
     "profileComplete": true
-  },
   {
     "Id": 3,
     "email": "alex.student@example.com",
@@ -164,9 +376,88 @@
       "visibility": "public",
       "showContact": false,
       "showCertifications": true
+"showCertifications": true
+    },
+    "goals": {
+      "staticMilestones": {
+        "STA_90sec": {
+          "title": "Static Apnea 90 Seconds",
+          "discipline": "STA",
+          "target": 90,
+          "current": 75,
+          "unit": "seconds",
+          "category": "confined_water",
+          "priority": "high",
+          "completed": false
+        }
+      },
+      "dynamicDisciplines": {
+        "DYN_50m": {
+          "title": "Dynamic Apnea 50m",
+          "discipline": "DYN",
+          "target": 50,
+          "current": 35,
+          "unit": "meters",
+          "priority": "high",
+          "completed": false
+        },
+        "DYNB_40m": {
+          "title": "Dynamic Bifins 40m",
+          "discipline": "DYNB",
+          "target": 40,
+          "current": 28,
+          "unit": "meters",
+          "priority": "medium",
+          "completed": false
+        }
+      },
+      "rescueCapability": {
+        "rescue_basics": {
+          "title": "Basic Rescue Skills",
+          "target": "Learn rescue techniques",
+          "current": "Starting soon",
+          "priority": "medium",
+          "completed": false
+        }
+      },
+      "certifications": {
+        "aida2_cert": {
+          "title": "AIDA 2 Certification",
+          "target": "Complete AIDA 2",
+          "current": "Training in progress",
+          "priority": "high",
+          "completed": false
+        }
+      },
+      "diveSites": {
+        "local_spots": {
+          "title": "Explore Local Dive Spots",
+          "target": "Visit 3 spots",
+          "current": "1 spot visited",
+          "priority": "low",
+          "completed": false
+        }
+      },
+      "trainingWorkshops": {
+        "safety_workshop": {
+          "title": "Safety and Buddy System Workshop",
+          "target": "Complete workshop",
+          "current": "Registered",
+          "priority": "high",
+          "completed": false
+        }
+      },
+      "personalGoals": {
+        "fitness_routine": {
+          "title": "Consistent Training Routine",
+          "target": "Train 4x per week",
+          "current": "2x per week",
+          "priority": "medium",
+          "completed": false
+        }
+      }
     },
     "profileComplete": true
-  },
   {
     "Id": 4,
     "email": "maya.diver@example.com",
@@ -223,9 +514,97 @@
       "visibility": "public",
       "showContact": true,
       "showCertifications": true
+"showCertifications": true
+    },
+    "goals": {
+      "staticMilestones": {
+        "STA_150sec": {
+          "title": "Static Apnea 2.5 Minutes",
+          "discipline": "STA",
+          "target": 150,
+          "current": 135,
+          "unit": "seconds",
+          "category": "confined_water",
+          "priority": "high",
+          "completed": false
+        }
+      },
+      "dynamicDisciplines": {
+        "DYN_75m": {
+          "title": "Dynamic Apnea 75m",
+          "discipline": "DYN",
+          "target": 75,
+          "current": 68,
+          "unit": "meters",
+          "priority": "high",
+          "completed": false
+        },
+        "DYNB_60m": {
+          "title": "Dynamic Bifins 60m",
+          "discipline": "DYNB",
+          "target": 60,
+          "current": 52,
+          "unit": "meters",
+          "priority": "medium",
+          "completed": false
+        },
+        "DNF_35m": {
+          "title": "Dynamic No Fins 35m",
+          "discipline": "DNF",
+          "target": 35,
+          "current": 28,
+          "unit": "meters",
+          "priority": "low",
+          "completed": false
+        }
+      },
+      "rescueCapability": {
+        "rescue_competition": {
+          "title": "Competition Rescue Skills",
+          "target": "Master competition rescue",
+          "current": "Basic level",
+          "priority": "medium",
+          "completed": false
+        }
+      },
+      "certifications": {
+        "judge_cert": {
+          "title": "Competition Judge Certification",
+          "target": "Become certified judge",
+          "current": "Studying materials",
+          "priority": "low",
+          "completed": false
+        }
+      },
+      "diveSites": {
+        "competition_venues": {
+          "title": "Visit Competition Venues",
+          "target": "3 major venues",
+          "current": "1 venue visited",
+          "priority": "medium",
+          "completed": false
+        }
+      },
+      "trainingWorkshops": {
+        "mental_training": {
+          "title": "Mental Training Workshop",
+          "target": "Complete course",
+          "current": "Completed",
+          "priority": "high",
+          "completed": true
+        }
+      },
+      "personalGoals": {
+        "national_team": {
+          "title": "National Team Selection",
+          "target": "Make national team",
+          "current": "Training for trials",
+          "priority": "high",
+          "completed": false
+        }
+      }
     },
     "profileComplete": true
-  },
   {
     "Id": 5,
     "email": "inactive@example.com",
@@ -247,7 +626,16 @@
       "visibility": "private",
       "showContact": false,
       "showCertifications": false
+"showCertifications": false
+    },
+    "goals": {
+      "staticMilestones": {},
+      "dynamicDisciplines": {},
+      "rescueCapability": {},
+      "certifications": {},
+      "diveSites": {},
+      "trainingWorkshops": {},
+      "personalGoals": {}
     },
     "profileComplete": false
-  }
 ]

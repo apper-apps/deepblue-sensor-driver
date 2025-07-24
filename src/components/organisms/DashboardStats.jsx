@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 import { DiveService } from "@/services/api/diveService";
 import { SessionService } from "@/services/api/sessionService";
+import { useAuth } from "@/contexts/AuthContext";
 import ApperIcon from "@/components/ApperIcon";
 import Card from "@/components/atoms/Card";
 import MetricCard from "@/components/molecules/MetricCard";
 import Error from "@/components/ui/Error";
 import Loading from "@/components/ui/Loading";
 const DashboardStats = () => {
-const [stats, setStats] = useState({
+  const { user } = useAuth();
+  const [stats, setStats] = useState({
     totalDives: 0,
     maxDepth: 0,
     maxDistance: 0,
@@ -1098,47 +1100,252 @@ return (
         
 {/* Goals Visual Board */}
         <Card className="p-6">
-          <h3 className="text-lg font-semibold font-display text-gray-900 mb-4">
+          <h3 className="text-lg font-semibold font-display text-gray-900 mb-6">
             Goals Visual Board
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200">
-              <div className="flex items-center mb-2">
-                <ApperIcon name="Target" size={20} className="text-blue-600 mr-2" />
-                <h4 className="font-semibold text-blue-900">Depth Goals</h4>
+          
+          {user?.goals && (
+            <div className="space-y-6">
+              {/* Featured Milestones */}
+              <div className="space-y-4">
+                <h4 className="text-md font-semibold text-gray-800 mb-3">Featured Milestones</h4>
+                
+                {/* Static Milestones for STA confined water */}
+                {Object.keys(user.goals.staticMilestones).length > 0 && (
+                  <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200">
+                    <div className="flex items-center mb-3">
+                      <ApperIcon name="Timer" size={20} className="text-blue-600 mr-2" />
+                      <h5 className="font-semibold text-blue-900">Static Milestones (STA - Confined Water)</h5>
+                    </div>
+                    <div className="space-y-3">
+                      {Object.entries(user.goals.staticMilestones).map(([key, goal]) => (
+                        <div key={key} className="bg-white bg-opacity-50 p-3 rounded-md">
+                          <div className="flex justify-between items-center mb-2">
+                            <span className="text-sm font-medium text-blue-900">{goal.title}</span>
+                            <span className="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">
+                              {goal.priority.toUpperCase()}
+                            </span>
+                          </div>
+                          <div className="w-full bg-blue-200 rounded-full h-2 mb-1">
+                            <div 
+                              className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                              style={{width: `${Math.min((goal.current / goal.target) * 100, 100)}%`}}
+                            ></div>
+                          </div>
+                          <p className="text-xs text-blue-700">
+                            Current: {goal.current}s / Target: {goal.target}s 
+                            ({Math.round((goal.current / goal.target) * 100)}% complete)
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                {/* Dynamic Disciplines (DYN, DYNB, DNF) */}
+                {Object.keys(user.goals.dynamicDisciplines).length > 0 && (
+                  <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-lg border border-purple-200">
+                    <div className="flex items-center mb-3">
+                      <ApperIcon name="ArrowRight" size={20} className="text-purple-600 mr-2" />
+                      <h5 className="font-semibold text-purple-900">Dynamic Disciplines (DYN, DYNB, DNF)</h5>
+                    </div>
+                    <div className="space-y-3">
+                      {Object.entries(user.goals.dynamicDisciplines).map(([key, goal]) => (
+                        <div key={key} className="bg-white bg-opacity-50 p-3 rounded-md">
+                          <div className="flex justify-between items-center mb-2">
+                            <span className="text-sm font-medium text-purple-900">{goal.title}</span>
+                            <span className="text-xs px-2 py-1 bg-purple-100 text-purple-800 rounded-full">
+                              {goal.priority.toUpperCase()}
+                            </span>
+                          </div>
+                          <div className="w-full bg-purple-200 rounded-full h-2 mb-1">
+                            <div 
+                              className="bg-purple-600 h-2 rounded-full transition-all duration-300" 
+                              style={{width: `${Math.min((goal.current / goal.target) * 100, 100)}%`}}
+                            ></div>
+                          </div>
+                          <p className="text-xs text-purple-700">
+                            Current: {goal.current}m / Target: {goal.target}m 
+                            ({Math.round((goal.current / goal.target) * 100)}% complete)
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
-              <p className="text-sm text-blue-700 mb-2">Target: 50m CWT</p>
-              <div className="w-full bg-blue-200 rounded-full h-2">
-                <div className="bg-blue-600 h-2 rounded-full" style={{width: `${Math.min((stats.maxDepth / 50) * 100, 100)}%`}}></div>
+              
+              {/* Rescue Capability Section */}
+              {Object.keys(user.goals.rescueCapability).length > 0 && (
+                <div className="bg-gradient-to-br from-red-50 to-red-100 p-4 rounded-lg border border-red-200">
+                  <div className="flex items-center mb-3">
+                    <ApperIcon name="Shield" size={20} className="text-red-600 mr-2" />
+                    <div className="flex items-center">
+                      <h5 className="font-semibold text-red-900 mr-2">Rescue Capability</h5>
+                      <span className="bg-red-600 text-white text-xs px-2 py-1 rounded-full font-medium">
+                        RESCUE
+                      </span>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    {Object.entries(user.goals.rescueCapability).map(([key, goal]) => (
+                      <div key={key} className="bg-white bg-opacity-50 p-3 rounded-md">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-sm font-medium text-red-900">{goal.title}</span>
+                          <span className="text-xs px-2 py-1 bg-red-100 text-red-800 rounded-full">
+                            {goal.priority.toUpperCase()}
+                          </span>
+                        </div>
+                        <div className="flex items-center">
+                          <span className="text-xs text-red-700">
+                            Target: {goal.target} | Current: {goal.current}
+                          </span>
+                          {goal.completed && (
+                            <ApperIcon name="CheckCircle" size={16} className="text-green-600 ml-2" />
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {/* Other Goals as Line Items */}
+              <div className="space-y-4">
+                <h4 className="text-md font-semibold text-gray-800">Other Goals</h4>
+                
+                {/* Certifications */}
+                {Object.keys(user.goals.certifications).length > 0 && (
+                  <div className="border-l-4 border-yellow-400 pl-4">
+                    <h5 className="font-medium text-gray-900 mb-2 flex items-center">
+                      <ApperIcon name="Award" size={16} className="text-yellow-600 mr-2" />
+                      Certifications
+                    </h5>
+                    <div className="space-y-2">
+                      {Object.entries(user.goals.certifications).map(([key, goal]) => (
+                        <div key={key} className="flex items-center justify-between text-sm">
+                          <span className="text-gray-700">{goal.title}</span>
+                          <div className="flex items-center">
+                            {goal.completed ? (
+                              <span className="text-green-600 font-medium">Completed</span>
+                            ) : (
+                              <span className="text-gray-500">{goal.current}</span>
+                            )}
+                            <input 
+                              type="checkbox" 
+                              checked={goal.completed} 
+                              readOnly 
+                              className="ml-2 w-4 h-4 text-green-600" 
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                {/* Dive Sites */}
+                {Object.keys(user.goals.diveSites).length > 0 && (
+                  <div className="border-l-4 border-cyan-400 pl-4">
+                    <h5 className="font-medium text-gray-900 mb-2 flex items-center">
+                      <ApperIcon name="MapPin" size={16} className="text-cyan-600 mr-2" />
+                      Dive Sites
+                    </h5>
+                    <div className="space-y-2">
+                      {Object.entries(user.goals.diveSites).map(([key, goal]) => (
+                        <div key={key} className="flex items-center justify-between text-sm">
+                          <span className="text-gray-700">{goal.title}</span>
+                          <div className="flex items-center">
+                            {goal.completed ? (
+                              <span className="text-green-600 font-medium">Completed</span>
+                            ) : (
+                              <span className="text-gray-500">{goal.current}</span>
+                            )}
+                            <input 
+                              type="checkbox" 
+                              checked={goal.completed} 
+                              readOnly 
+                              className="ml-2 w-4 h-4 text-green-600" 
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                {/* Training Workshops */}
+                {Object.keys(user.goals.trainingWorkshops).length > 0 && (
+                  <div className="border-l-4 border-indigo-400 pl-4">
+                    <h5 className="font-medium text-gray-900 mb-2 flex items-center">
+                      <ApperIcon name="BookOpen" size={16} className="text-indigo-600 mr-2" />
+                      Training Workshops
+                    </h5>
+                    <div className="space-y-2">
+                      {Object.entries(user.goals.trainingWorkshops).map(([key, goal]) => (
+                        <div key={key} className="flex items-center justify-between text-sm">
+                          <span className="text-gray-700">{goal.title}</span>
+                          <div className="flex items-center">
+                            {goal.completed ? (
+                              <span className="text-green-600 font-medium">Completed</span>
+                            ) : (
+                              <span className="text-gray-500">{goal.current}</span>
+                            )}
+                            <input 
+                              type="checkbox" 
+                              checked={goal.completed} 
+                              readOnly 
+                              className="ml-2 w-4 h-4 text-green-600" 
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                {/* Other Personal Goals */}
+                {Object.keys(user.goals.personalGoals).length > 0 && (
+                  <div className="border-l-4 border-pink-400 pl-4">
+                    <h5 className="font-medium text-gray-900 mb-2 flex items-center">
+                      <ApperIcon name="Heart" size={16} className="text-pink-600 mr-2" />
+                      Other Personal Goals
+                    </h5>
+                    <div className="space-y-2">
+                      {Object.entries(user.goals.personalGoals).map(([key, goal]) => (
+                        <div key={key} className="flex items-center justify-between text-sm">
+                          <span className="text-gray-700">{goal.title}</span>
+                          <div className="flex items-center">
+                            {goal.completed ? (
+                              <span className="text-green-600 font-medium">Completed</span>
+                            ) : (
+                              <div className="flex items-center">
+                                <div className="w-16 bg-gray-200 rounded-full h-1 mr-2">
+                                  <div 
+                                    className="bg-pink-500 h-1 rounded-full" 
+                                    style={{width: typeof goal.current === 'string' && goal.current.includes('%') ? goal.current : '50%'}}
+                                  ></div>
+                                </div>
+                                <span className="text-gray-500 text-xs">{goal.current}</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
-              <p className="text-xs text-blue-600 mt-1">Current: {stats.maxDepth}m ({Math.round((stats.maxDepth / 50) * 100)}%)</p>
             </div>
-            
-            <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-lg border border-purple-200">
-              <div className="flex items-center mb-2">
-                <ApperIcon name="ArrowRight" size={20} className="text-purple-600 mr-2" />
-                <h4 className="font-semibold text-purple-900">Distance Goals</h4>
-              </div>
-              <p className="text-sm text-purple-700 mb-2">Target: 200m DYN</p>
-              <div className="w-full bg-purple-200 rounded-full h-2">
-                <div className="bg-purple-600 h-2 rounded-full" style={{width: `${Math.min((stats.maxDistance / 200) * 100, 100)}%`}}></div>
-              </div>
-              <p className="text-xs text-purple-600 mt-1">Current: {stats.maxDistance}m ({Math.round((stats.maxDistance / 200) * 100)}%)</p>
+          )}
+          
+          {!user?.goals && (
+            <div className="text-center py-8">
+              <ApperIcon name="Target" size={48} className="text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-500">No goals set yet. Complete your profile to add personal goals.</p>
             </div>
-            
-            <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg border border-green-200">
-              <div className="flex items-center mb-2">
-                <ApperIcon name="Clock" size={20} className="text-green-600 mr-2" />
-                <h4 className="font-semibold text-green-900">Time Goals</h4>
-              </div>
-              <p className="text-sm text-green-700 mb-2">Target: 5:00 STA</p>
-              <div className="w-full bg-green-200 rounded-full h-2">
-                <div className="bg-green-600 h-2 rounded-full" style={{width: `${Math.min((stats.maxTime / 300) * 100, 100)}%`}}></div>
-              </div>
-              <p className="text-xs text-green-600 mt-1">Current: {formatTime(stats.maxTime)} ({Math.round((stats.maxTime / 300) * 100)}%)</p>
-            </div>
-          </div>
-</Card>
+          )}
+        </Card>
         
         {/* Open Water and Pool Bar Charts */}
         <div className="grid grid-cols-1 gap-6">
