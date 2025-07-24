@@ -53,10 +53,9 @@
     "type": "open_water",
     "discipline": "CWTB",
     "location": "Red Sea, Sharm El Sheikh",
-    "instructorId": 1,
+"instructorId": 1,
     "buddyName": "Elena Rodriguez",
     "safetyNotes": "New equipment testing with instructor supervision. All safety checks completed.",
-"safetyNotes": "New equipment testing with instructor supervision. All safety checks completed.",
     "notes": "Bifins training day. Working on power and efficiency with new fins.",
     "userId": 3
   },
@@ -72,3 +71,4 @@
     "notes": "First FIM session of the year. Working on rope technique and rhythm. Water crystal clear.",
     "userId": 4
   }
+]
