@@ -49,13 +49,14 @@ return (
       {!user?.profileComplete && (
         <Card className="p-4 bg-blue-50 border-blue-200">
           <div className="flex items-center justify-between">
-            <div className="flex items-center">
+<div className="flex items-center">
               <ApperIcon name="User" size={20} className="text-blue-600 mr-3" />
-<h3 className="text-sm font-medium text-blue-900">Complete Your Profile</h3>
+              <div>
+                <h3 className="text-sm font-medium text-blue-900">Complete Your Profile</h3>
                 <p className="text-sm text-blue-700">
                   Add your bio, emergency contact, and safety information to get the most out of Freediving Journey
                 </p>
-</div>
+              </div>
             </div>
             <Link to="/profile">
               <Button size="sm" variant="outline" className="border-blue-300 text-blue-700 hover:bg-blue-100">

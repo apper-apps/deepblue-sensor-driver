@@ -301,9 +301,8 @@ const [loading, setLoading] = useState(true);
                     <ApperIcon name="Hash" size={14} className="mr-2" />
                     {cert.certificateNumber}
                   </div>
-                )}
+)}
               </div>
-</div>
 
               <div className="mt-4 pt-4 border-t border-gray-200">
                 <div className="grid grid-cols-1 gap-2">
