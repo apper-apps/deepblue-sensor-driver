@@ -76,7 +76,7 @@ const loadStats = async () => {
     }
   };
 
-  const calculateProgressData = (sessions, dives) => {
+const calculateProgressData = (sessions, dives) => {
     // Group dives by session date for chronological progress
     const sessionDiveMap = {};
     sessions.forEach(session => {
@@ -87,55 +87,62 @@ const loadStats = async () => {
       };
     });
 
-    // Calculate best performance per session for each category
-    const depthProgress = [];
-    const distanceProgress = [];
-    const timeProgress = [];
+    // Initialize discipline-specific progress arrays
+    const disciplineProgress = {
+      CWT: [],
+      CWTB: [],
+      CNF: [],
+      FIM: [],
+      DYN: [],
+      DYNB: [],
+      DNF: []
+    };
 
     Object.values(sessionDiveMap)
       .sort((a, b) => new Date(a.date) - new Date(b.date))
       .forEach(session => {
         const { date, discipline, dives: sessionDives } = session;
         
-        // Depth progress (CWT, CNF, CWTB disciplines)
-        const depthDives = sessionDives.filter(dive => dive.depth !== null);
-        if (depthDives.length > 0) {
-          const bestDepth = Math.max(...depthDives.map(d => d.depth));
-          depthProgress.push({
-            date,
-            value: bestDepth,
-            discipline: discipline
-          });
+        if (!disciplineProgress[discipline]) return;
+
+        let bestValue = null;
+        let metric = '';
+
+        // Determine the metric and best value based on discipline
+        if (['CWT', 'CWTB', 'CNF', 'FIM'].includes(discipline)) {
+          // Depth disciplines
+          const depthDives = sessionDives.filter(dive => dive.depth !== null);
+          if (depthDives.length > 0) {
+            bestValue = Math.max(...depthDives.map(d => d.depth));
+            metric = 'depth';
+          }
+        } else if (['DYN', 'DYNB', 'DNF'].includes(discipline)) {
+          // Distance disciplines
+          const distanceDives = sessionDives.filter(dive => dive.distance !== null);
+          if (distanceDives.length > 0) {
+            bestValue = Math.max(...distanceDives.map(d => d.distance));
+            metric = 'distance';
+          }
+        } else if (discipline === 'STA') {
+          // Time discipline
+          const timeDives = sessionDives.filter(dive => dive.time !== null);
+          if (timeDives.length > 0) {
+            bestValue = Math.max(...timeDives.map(d => d.time));
+            metric = 'time';
+          }
         }
 
-        // Distance progress (DYN, DNF disciplines)
-        const distanceDives = sessionDives.filter(dive => dive.distance !== null);
-        if (distanceDives.length > 0) {
-          const bestDistance = Math.max(...distanceDives.map(d => d.distance));
-          distanceProgress.push({
+        if (bestValue !== null) {
+          disciplineProgress[discipline].push({
             date,
-            value: bestDistance,
-            discipline: discipline
-          });
-        }
-
-        // Time progress (STA discipline)
-        const timeDives = sessionDives.filter(dive => dive.time !== null);
-        if (timeDives.length > 0) {
-          const bestTime = Math.max(...timeDives.map(d => d.time));
-          timeProgress.push({
-            date,
-            value: bestTime,
-            discipline: discipline
+            value: bestValue,
+            metric,
+            discipline
           });
         }
       });
 
-    return {
-      depth: depthProgress,
-      distance: distanceProgress,
-      time: timeProgress
-    };
+    return disciplineProgress;
   };
 
   const formatTime = (seconds) => {
@@ -147,16 +154,66 @@ const loadStats = async () => {
   if (loading) return <Loading />;
   if (error) return <Error message={error} onRetry={loadStats} />;
 
-const renderProgressChart = (data, title, color, unit = '', yAxisFormatter = null) => {
+const getDisciplineConfig = (discipline) => {
+    const configs = {
+      CWT: {
+        title: 'Constant Weight (CWT)',
+        color: '#0ea5e9',
+        unit: 'm',
+        metric: 'Depth'
+      },
+      CWTB: {
+        title: 'Constant Weight Bifins (CWTB)',
+        color: '#06b6d4',
+        unit: 'm',
+        metric: 'Depth'
+      },
+      CNF: {
+        title: 'Constant No Fins (CNF)',
+        color: '#0284c7',
+        unit: 'm',
+        metric: 'Depth'
+      },
+      FIM: {
+        title: 'Free Immersion (FIM)',
+        color: '#0369a1',
+        unit: 'm',
+        metric: 'Depth'
+      },
+      DYN: {
+        title: 'Dynamic Apnea (DYN)',
+        color: '#8b5cf6',
+        unit: 'm',
+        metric: 'Distance'
+      },
+      DYNB: {
+        title: 'Dynamic Bifins (DYNB)',
+        color: '#a855f7',
+        unit: 'm',
+        metric: 'Distance'
+      },
+      DNF: {
+        title: 'Dynamic No Fins (DNF)',
+        color: '#9333ea',
+        unit: 'm',
+        metric: 'Distance'
+      }
+    };
+    return configs[discipline] || configs.CWT;
+  };
+
+  const renderDisciplineChart = (discipline, data) => {
+    const config = getDisciplineConfig(discipline);
+    
     if (data.length === 0) {
       return (
         <Card className="p-6">
-          <h3 className="text-lg font-semibold font-display text-gray-900 mb-4">{title}</h3>
+          <h3 className="text-lg font-semibold font-display text-gray-900 mb-4">{config.title}</h3>
           <div className="flex items-center justify-center h-64 text-gray-500">
             <div className="text-center">
               <div className="text-4xl mb-2">📊</div>
-              <p>No data available yet</p>
-              <p className="text-sm">Complete some sessions to see your progress</p>
+              <p>No {discipline} sessions yet</p>
+              <p className="text-sm">Complete some {discipline} sessions to see your progress</p>
             </div>
           </div>
         </Card>
@@ -165,7 +222,7 @@ const renderProgressChart = (data, title, color, unit = '', yAxisFormatter = nul
 
     const chartData = {
       series: [{
-        name: title,
+        name: `${config.metric} (${config.unit})`,
         data: data.map(item => ({
           x: new Date(item.date).getTime(),
           y: item.value,
@@ -183,14 +240,14 @@ const renderProgressChart = (data, title, color, unit = '', yAxisFormatter = nul
             enabled: false
           }
         },
-        colors: [color],
+        colors: [config.color],
         stroke: {
           curve: 'smooth',
           width: 3
         },
         markers: {
           size: 6,
-          colors: [color],
+          colors: [config.color],
           strokeColors: '#fff',
           strokeWidth: 2,
           hover: {
@@ -216,8 +273,8 @@ const renderProgressChart = (data, title, color, unit = '', yAxisFormatter = nul
               colors: '#64748b',
               fontSize: '12px'
             },
-            formatter: yAxisFormatter || function(value) {
-              return value + unit;
+            formatter: function(value) {
+              return value + config.unit;
             }
           }
         },
@@ -225,12 +282,12 @@ const renderProgressChart = (data, title, color, unit = '', yAxisFormatter = nul
           custom: function({ series, seriesIndex, dataPointIndex, w }) {
             const data = w.config.series[seriesIndex].data[dataPointIndex];
             const date = new Date(data.x).toLocaleDateString();
-            const value = yAxisFormatter ? yAxisFormatter(data.y) : data.y + unit;
+            const value = data.y + config.unit;
             return `
               <div class="bg-white p-3 rounded-lg shadow-lg border">
                 <div class="font-semibold text-gray-900">${date}</div>
-                <div class="text-${color.replace('#', '')}">${title}: ${value}</div>
-                <div class="text-sm text-gray-600">Discipline: ${data.discipline}</div>
+                <div style="color: ${config.color}">${config.metric}: ${value}</div>
+                <div class="text-sm text-gray-600">${config.title}</div>
               </div>
             `;
           }
@@ -251,7 +308,7 @@ const renderProgressChart = (data, title, color, unit = '', yAxisFormatter = nul
 
     return (
       <Card className="p-6">
-        <h3 className="text-lg font-semibold font-display text-gray-900 mb-4">{title} Progress</h3>
+        <h3 className="text-lg font-semibold font-display text-gray-900 mb-4">{config.title}</h3>
         <Chart
           options={chartData.options}
           series={chartData.series}
@@ -312,35 +369,21 @@ const renderProgressChart = (data, title, color, unit = '', yAxisFormatter = nul
         />
       </div>
 
-      {/* Progress Charts Section */}
+{/* Discipline-Specific Progress Charts */}
       <div className="space-y-6">
         <div>
-          <h2 className="text-xl font-bold font-display text-gray-900 mb-2">Progress Charts</h2>
-          <p className="text-gray-600">Track your improvement across all freediving disciplines</p>
+          <h2 className="text-xl font-bold font-display text-gray-900 mb-2">Discipline Progress Charts</h2>
+          <p className="text-gray-600">Track your improvement in each freediving discipline</p>
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {renderProgressChart(
-            stats.progressData.depth,
-            "Depth Performance",
-            "#0ea5e9",
-            "m"
-          )}
-          
-          {renderProgressChart(
-            stats.progressData.distance,
-            "Distance Performance", 
-            "#8b5cf6",
-            "m"
-          )}
-          
-          {renderProgressChart(
-            stats.progressData.time,
-            "Static Apnea Performance",
-            "#10b981",
-            "",
-            (value) => formatTime(value)
-          )}
+          {renderDisciplineChart('CWT', stats.progressData.CWT)}
+          {renderDisciplineChart('CWTB', stats.progressData.CWTB)}
+          {renderDisciplineChart('CNF', stats.progressData.CNF)}
+          {renderDisciplineChart('FIM', stats.progressData.FIM)}
+          {renderDisciplineChart('DYN', stats.progressData.DYN)}
+          {renderDisciplineChart('DYNB', stats.progressData.DYNB)}
+          {renderDisciplineChart('DNF', stats.progressData.DNF)}
         </div>
       </div>
     </div>
