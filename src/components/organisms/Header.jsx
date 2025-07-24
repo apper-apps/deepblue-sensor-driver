@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import ApperIcon from "@/components/ApperIcon";
-import Button from "@/components/atoms/Button";
-import { cn } from "@/utils/cn";
-import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { cn } from "@/utils/cn";
+import ApperIcon from "@/components/ApperIcon";
+import Profile from "@/components/pages/Profile";
+import Button from "@/components/atoms/Button";
 const Header = () => {
   const { user, logout, isAdmin, isInstructor } = useAuth();
   const { currentTheme, themes, switchTheme } = useTheme();
@@ -208,7 +209,7 @@ return (
             <div className="w-8 h-8 bg-depth-gradient rounded-lg flex items-center justify-center">
               <ApperIcon name="Waves" size={20} className="text-white" />
             </div>
-            <h1 className={`text-xl font-bold font-display transition-colors ${
+<h1 className={`text-xl font-bold font-display transition-colors ${
               currentTheme === 'dark' 
                 ? 'text-gray-100' 
                 : currentTheme === 'dive'
@@ -217,11 +218,11 @@ return (
                 ? 'text-orange-900'
                 : 'text-gray-900'
             }`}>
-              My Freediving Journey
+              Freediving Journey
             </h1>
           </div>
           
-          <nav className="hidden md:flex space-x-8">
+<nav className="hidden md:flex space-x-8">
             {navItems.map((item) => (
               <NavLink
                 key={item.to}

@@ -1,22 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
-import Card from '@/components/atoms/Card';
-import Button from '@/components/atoms/Button';
-import FormField from '@/components/molecules/FormField';
-import ApperIcon from '@/components/ApperIcon';
-import Loading from '@/components/ui/Loading';
-import Error from '@/components/ui/Error';
-import Empty from '@/components/ui/Empty';
-import { useAuth } from '@/contexts/AuthContext';
-import { UserService } from '@/services/api/userService';
-import { format } from 'date-fns';
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { format } from "date-fns";
+import { useAuth } from "@/contexts/AuthContext";
+import { UserService } from "@/services/api/userService";
+import ApperIcon from "@/components/ApperIcon";
+import Select from "@/components/atoms/Select";
+import Card from "@/components/atoms/Card";
+import Button from "@/components/atoms/Button";
+import FormField from "@/components/molecules/FormField";
+import Error from "@/components/ui/Error";
+import Empty from "@/components/ui/Empty";
+import Loading from "@/components/ui/Loading";
 
 const Certifications = () => {
   const { user } = useAuth();
   const [certifications, setCertifications] = useState([]);
-  const [loading, setLoading] = useState(true);
+const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
+  const [licensePhoto, setLicensePhoto] = useState(null);
   const [newCert, setNewCert] = useState({
     organization: '',
     level: '',
@@ -24,7 +26,6 @@ const Certifications = () => {
     expiryDate: '',
     certificateNumber: ''
   });
-
   useEffect(() => {
     if (user?.certifications) {
       setCertifications(user.certifications);
@@ -42,7 +43,7 @@ const Certifications = () => {
       const addedCert = await UserService.addCertification(user.Id, {
         ...newCert,
         verified: false
-      });
+});
       setCertifications(prev => [...prev, addedCert]);
       setNewCert({
         organization: '',
@@ -51,6 +52,7 @@ const Certifications = () => {
         expiryDate: '',
         certificateNumber: ''
       });
+      setLicensePhoto(null);
       setShowAddForm(false);
       toast.success('Certification added successfully');
     } catch (error) {
@@ -93,8 +95,22 @@ const Certifications = () => {
       case 'cmas': return 'bg-orange-100 text-orange-800';
       default: return 'bg-gray-100 text-gray-800';
     }
-  };
+};
 
+  const handleLicensePhotoUpload = (e) => {
+    if (!e?.target?.files || e.target.files.length === 0) {
+      return;
+    }
+    
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setLicensePhoto(event.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
   if (loading) return <Loading />;
   if (error) return <Error message={error} />;
 
@@ -142,19 +158,19 @@ const Certifications = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField
+<FormField
               label="Organization"
               type="select"
               value={newCert.organization}
               onChange={(e) => setNewCert(prev => ({ ...prev, organization: e.target.value }))}
-              required
             >
               <option value="">Select organization</option>
               <option value="AIDA">AIDA</option>
+              <option value="CMAS">CMAS</option>
+              <option value="Molchanovs">Molchanovs</option>
+              <option value="Other">Other</option>
               <option value="PADI">PADI</option>
               <option value="SSI">SSI</option>
-              <option value="CMAS">CMAS</option>
-              <option value="Other">Other</option>
             </FormField>
 
             <FormField
@@ -180,16 +196,33 @@ const Certifications = () => {
               onChange={(e) => setNewCert(prev => ({ ...prev, expiryDate: e.target.value }))}
             />
 
-            <FormField
+<FormField
               label="Certificate Number"
               value={newCert.certificateNumber}
               onChange={(e) => setNewCert(prev => ({ ...prev, certificateNumber: e.target.value }))}
-              placeholder="Certificate ID/Number"
               className="md:col-span-2"
             />
+
+            <FormField
+              label="License Picture"
+              type="file"
+              accept="image/*"
+              onChange={handleLicensePhotoUpload}
+              className="md:col-span-2"
+            />
+            
+            {licensePhoto && (
+              <div className="md:col-span-2">
+                <img 
+                  src={licensePhoto} 
+                  alt="License preview" 
+                  className="w-48 h-32 object-cover rounded-lg border"
+                />
+              </div>
+            )}
           </div>
 
-          <div className="mt-6 flex justify-end space-x-3">
+<div className="mt-6 flex justify-end space-x-3">
             <Button variant="outline" onClick={() => setShowAddForm(false)}>
               Cancel
             </Button>
@@ -270,12 +303,19 @@ const Certifications = () => {
                   </div>
                 )}
               </div>
+</div>
 
               <div className="mt-4 pt-4 border-t border-gray-200">
-                <Button variant="outline" size="sm" className="w-full">
-                  <ApperIcon name="Upload" size={16} className="mr-2" />
-                  Upload Certificate
-                </Button>
+                <div className="grid grid-cols-1 gap-2">
+                  <Button variant="outline" size="sm" className="w-full">
+                    <ApperIcon name="Upload" size={16} className="mr-2" />
+                    Upload Certificate
+                  </Button>
+                  <Button variant="outline" size="sm" className="w-full">
+                    <ApperIcon name="Camera" size={16} className="mr-2" />
+                    Add License Picture
+                  </Button>
+                </div>
               </div>
             </Card>
           ))}

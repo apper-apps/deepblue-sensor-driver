@@ -3,7 +3,6 @@ import Chart from "react-apexcharts";
 import { DiveService } from "@/services/api/diveService";
 import { SessionService } from "@/services/api/sessionService";
 import ApperIcon from "@/components/ApperIcon";
-import Dashboard from "@/components/pages/Dashboard";
 import Card from "@/components/atoms/Card";
 import MetricCard from "@/components/molecules/MetricCard";
 import Error from "@/components/ui/Error";
@@ -31,10 +30,10 @@ const [stats, setStats] = useState({
         CNF: 0,
         FIM: 0
       },
-      pool: {
+pool: {
         DYN: 0,
         DYNB: 0,
-STA: 0
+        STA: 0
       }
     },
     mostRecordedDiscipline: {
@@ -604,14 +603,9 @@ const renderPoolBarChart = () => {
           height: 300,
           toolbar: { show: false }
         },
-        plotOptions: {
-          bar: {
-            horizontal: true,
-            barHeight: '60%'
-          }
-        },
         colors: colors,
-        xaxis: {
+xaxis: {
+          categories: data.map(item => item.discipline),
           labels: {
             style: {
               colors: '#64748b',
@@ -620,7 +614,6 @@ const renderPoolBarChart = () => {
           }
         },
         yaxis: {
-          categories: data.map(item => item.discipline),
           labels: {
             style: {
               colors: '#64748b',
@@ -816,10 +809,10 @@ const renderDisciplineChart = (discipline, data, chartType = 'line') => {
                   colors: '#64748b',
                   fontSize: '12px'
                 }
-              }
+}
             }
           : {
-              categories: data.map((_, index) => `Session ${index + 1}`),
+              categories: data.map(item => new Date(item.date).toLocaleDateString()),
               labels: {
                 style: {
                   colors: '#64748b',
@@ -827,9 +820,9 @@ const renderDisciplineChart = (discipline, data, chartType = 'line') => {
                 }
               }
             },
-        yaxis: isHorizontal && actualChartType === 'bar'
+yaxis: isHorizontal && actualChartType === 'bar'
           ? {
-              categories: data.map((_, index) => `Session ${index + 1}`),
+              categories: data.map(item => new Date(item.date).toLocaleDateString()),
               labels: {
                 style: {
                   colors: '#64748b',
@@ -961,27 +954,16 @@ return (
         
         {/* 7. Most Favorite Dive Site */}
         {stats.favoriteDiveSite.name && (
-          <MetricCard
+<MetricCard
             title="Most Favorite Dive Site"
-value={stats.favoriteDiveSite.name}
+            value={stats.favoriteDiveSite.name}
             subtitle={`${stats.favoriteDiveSite.count} sessions recorded`}
             icon="MapPin"
             className="bg-cyan-50 border-cyan-200"
           />
         )}
         
-        {/* My Top Dive State Of Mind */}
-        {stats.topMood.mood && (
-          <MetricCard
-            title="My Top Dive State Of Mind"
-            value={`${getMoodIcon(stats.topMood.mood)} ${getMoodLabel(stats.topMood.mood)}`}
-            subtitle={`${stats.topMood.count} sessions (${stats.topMood.percentage}%)`}
-            icon="Heart"
-            className="bg-pink-50 border-pink-200"
-          />
-        )}
-        
-        {/* 9. Recent Activity */}
+        {/* 8. Recent Activity */}
         <MetricCard
           title="Recent Activity"
           value={stats.recentSessions.length}
@@ -998,17 +980,44 @@ value={stats.favoriteDiveSite.name}
           <p className="text-gray-600">Comprehensive analysis of your freediving performance</p>
         </div>
 
-        {/* Dive Type Distribution */}
 {/* Dive Type Distribution and Mood Analytics */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {renderPieChart()}
           {renderMoodPieChart()}
         </div>
         
-        {/* Goals Dashboard - Visual Board */}
+        {/* My Top Dive State of Mind Dashboard */}
+        {stats.topMood.mood && (
+          <Card className="p-6">
+            <h3 className="text-lg font-semibold font-display text-gray-900 mb-4">
+              My Top Dive State of Mind
+            </h3>
+            <div className="flex items-center justify-center">
+              <div className="text-center">
+                <div className="text-6xl mb-4">{getMoodIcon(stats.topMood.mood)}</div>
+                <h4 className="text-2xl font-bold text-gray-900 mb-2">
+                  {getMoodLabel(stats.topMood.mood)}
+                </h4>
+                <p className="text-gray-600 mb-4">
+                  Your most recorded dive state of mind
+                </p>
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="text-3xl font-bold text-primary-600">
+                    {stats.topMood.percentage}%
+                  </div>
+                  <p className="text-sm text-gray-500">
+                    {stats.topMood.count} out of {Object.values(stats.moodStats).reduce((sum, count) => sum + count, 0)} sessions
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Card>
+        )}
+        
+{/* Goals Visual Board */}
         <Card className="p-6">
           <h3 className="text-lg font-semibold font-display text-gray-900 mb-4">
-            Goals Dashboard - Visual Board
+            Goals Visual Board
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200">
@@ -1047,8 +1056,9 @@ value={stats.favoriteDiveSite.name}
               <p className="text-xs text-green-600 mt-1">Current: {formatTime(stats.maxTime)} ({Math.round((stats.maxTime / 300) * 100)}%)</p>
             </div>
           </div>
-        </Card>
-{/* Open Water and Pool Bar Charts */}
+</Card>
+        
+        {/* Open Water and Pool Bar Charts */}
         <div className="grid grid-cols-1 gap-6">
           {renderOpenWaterBarChart()}
           {renderPoolBarChart()}

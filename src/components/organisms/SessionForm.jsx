@@ -201,9 +201,9 @@ const session = await SessionService.create({
         <FormField
           label="Depth"
           type="number"
-          value={currentDive.depth}
+value={currentDive.depth}
           onChange={(e) => handleDiveChange("depth", e.target.value)}
-          placeholder="Enter depth in meters"
+          placeholder="Enter depth in meters, and should be in negative values"
           step="0.1"
           min="0"
         />
@@ -360,33 +360,7 @@ const session = await SessionService.create({
             rows={2}
           />
         </div>
-      </Card>
-
-      {/* Dive Entry */}
-      {sessionData.type && sessionData.discipline && (
-        <Card className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold font-display text-gray-900">
-              Add Dive
-            </h2>
-            <DisciplineBadge 
-              discipline={sessionData.discipline} 
-              type={sessionData.type} 
-            />
-          </div>
-          
-<div className="grid grid-cols-1 gap-4">
-            {renderDiveInput()}
-          </div>
-          
-<div className="mt-4 flex justify-end">
-            <Button onClick={addDive} className="w-full md:w-auto">
-              <ApperIcon name="Plus" size={16} className="mr-2" />
-              Add Dive
-            </Button>
-          </div>
-        </Card>
-      )}
+</Card>
 
       {/* Recorded Dives */}
       {dives.length > 0 && (
@@ -402,7 +376,7 @@ const session = await SessionService.create({
                   <span className="w-8 h-8 bg-primary-100 text-primary-700 rounded-full flex items-center justify-center text-sm font-medium">
                     {index + 1}
                   </span>
-<div>
+                  <div>
                     <p className="font-medium text-gray-900">
                       {getDiveDisplayValue(dive)}
                     </p>
@@ -421,8 +395,7 @@ const session = await SessionService.create({
             ))}
           </div>
         </Card>
-)}
-
+      )}
       {/* Additional Information */}
       {sessionData.type && sessionData.discipline && (
         <Card className="p-6">
@@ -510,6 +483,32 @@ const session = await SessionService.create({
               <option value="unpleasant">Unpleasant</option>
               <option value="very_unpleasant">Very Unpleasant</option>
             </FormField>
+          </div>
+</Card>
+      )}
+
+      {/* Dive Entry */}
+      {sessionData.type && sessionData.discipline && (
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold font-display text-gray-900">
+              Add Dive
+            </h2>
+            <DisciplineBadge 
+              discipline={sessionData.discipline} 
+              type={sessionData.type} 
+            />
+          </div>
+          
+          <div className="grid grid-cols-1 gap-4">
+            {renderDiveInput()}
+          </div>
+          
+          <div className="mt-4 flex justify-end">
+            <Button onClick={addDive} className="w-full md:w-auto">
+              <ApperIcon name="Plus" size={16} className="mr-2" />
+              Add Dive
+            </Button>
           </div>
         </Card>
       )}
