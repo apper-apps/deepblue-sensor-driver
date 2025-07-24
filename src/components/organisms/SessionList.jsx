@@ -18,7 +18,10 @@ const SessionList = () => {
   const [error, setError] = useState("");
   const [filter, setFilter] = useState({
     type: "",
-    discipline: ""
+    discipline: "",
+    location: "",
+    dateFrom: "",
+    dateTo: ""
   });
 
   useEffect(() => {
@@ -68,11 +71,32 @@ const SessionList = () => {
     }
   };
 
-  const filteredSessions = sessions.filter(session => {
+const filteredSessions = sessions.filter(session => {
     if (filter.type && session.type !== filter.type) return false;
     if (filter.discipline && session.discipline !== filter.discipline) return false;
+    if (filter.location && !session.location?.toLowerCase().includes(filter.location.toLowerCase())) return false;
+    
+    // Date range filtering
+    if (filter.dateFrom) {
+      const sessionDate = new Date(session.date);
+      const fromDate = new Date(filter.dateFrom);
+      if (sessionDate < fromDate) return false;
+    }
+    if (filter.dateTo) {
+      const sessionDate = new Date(session.date);
+      const toDate = new Date(filter.dateTo);
+      toDate.setHours(23, 59, 59, 999); // Include the entire end date
+      if (sessionDate > toDate) return false;
+    }
+    
     return true;
-  });
+  }).sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by most recent first
+
+  // Get unique locations for filter dropdown
+  const locationOptions = [...new Set(sessions
+    .map(session => session.location)
+    .filter(location => location && location.trim() !== "")
+  )].sort();
 
 const disciplineOptions = {
     open_water: ["CWT", "CWTB", "CNF", "FIM"],
@@ -85,8 +109,8 @@ const disciplineOptions = {
   return (
     <div className="space-y-6">
       {/* Filters */}
-      <Card className="p-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+<Card className="p-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           <FormField
             label="Session Type"
             type="select"
@@ -111,16 +135,42 @@ const disciplineOptions = {
             ))}
           </FormField>
           
-          <div className="flex items-end">
-            <Button
-              variant="outline"
-              onClick={() => setFilter({ type: "", discipline: "" })}
-              className="w-full"
-            >
-              <ApperIcon name="X" size={16} className="mr-2" />
-              Clear Filters
-            </Button>
-          </div>
+          <FormField
+            label="Location"
+            type="select"
+            value={filter.location}
+            onChange={(e) => setFilter(prev => ({ ...prev, location: e.target.value }))}
+          >
+            <option value="">All Locations</option>
+            {locationOptions.map(location => (
+              <option key={location} value={location}>{location}</option>
+            ))}
+          </FormField>
+          
+          <FormField
+            label="Date From"
+            type="date"
+            value={filter.dateFrom}
+            onChange={(e) => setFilter(prev => ({ ...prev, dateFrom: e.target.value }))}
+          />
+          
+          <FormField
+            label="Date To"
+            type="date"
+            value={filter.dateTo}
+            onChange={(e) => setFilter(prev => ({ ...prev, dateTo: e.target.value }))}
+          />
+        </div>
+        
+        <div className="mt-4 flex justify-end">
+          <Button
+            variant="outline"
+            onClick={() => setFilter({ type: "", discipline: "", location: "", dateFrom: "", dateTo: "" })}
+            className="w-full md:w-auto"
+          >
+            <ApperIcon name="X" size={16} className="mr-2" />
+            Clear All Filters
+          </Button>
         </div>
       </Card>
 

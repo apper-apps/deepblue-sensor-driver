@@ -519,6 +519,87 @@ const renderPieChart = () => {
         />
       </Card>
     );
+};
+
+  const renderDisciplinesPieChart = () => {
+    // Calculate total dives for each discipline across all session types
+    const allDisciplines = {
+      ...stats.disciplineStats.openWater,
+      ...stats.disciplineStats.pool
+    };
+    
+    const disciplineData = Object.entries(allDisciplines).filter(([_, count]) => count > 0);
+    
+    if (disciplineData.length === 0) {
+      return (
+        <Card className="p-6">
+          <h3 className="text-lg font-semibold font-display text-gray-900 mb-4">
+            Disciplines Distribution
+          </h3>
+          <div className="flex items-center justify-center h-64 text-gray-500">
+            <div className="text-center">
+              <div className="text-4xl mb-2">🏊‍♂️</div>
+              <p>No disciplines recorded yet</p>
+            </div>
+          </div>
+        </Card>
+      );
+    }
+
+    const total = disciplineData.reduce((sum, [_, count]) => sum + count, 0);
+    const colors = [
+      '#0ea5e9', '#06b6d4', '#0284c7', '#0369a1', // Open water colors
+      '#8b5cf6', '#a855f7', '#9333ea', '#10b981'  // Pool colors
+    ];
+
+    const chartData = {
+      series: disciplineData.map(([_, count]) => count),
+      options: {
+        chart: {
+          type: 'pie',
+          height: 300
+        },
+        labels: disciplineData.map(([discipline, _]) => discipline),
+        colors: colors.slice(0, disciplineData.length),
+        legend: {
+          position: 'bottom',
+          fontSize: '12px'
+        },
+        tooltip: {
+          y: {
+            formatter: function(value) {
+              const percentage = ((value / total) * 100).toFixed(1);
+              return `${value} dives (${percentage}%)`;
+            }
+          }
+        },
+        responsive: [{
+          breakpoint: 768,
+          options: {
+            chart: {
+              height: 250
+            },
+            legend: {
+              fontSize: '10px'
+            }
+          }
+        }]
+      }
+    };
+
+    return (
+      <Card className="p-6">
+        <h3 className="text-lg font-semibold font-display text-gray-900 mb-4">
+          Disciplines Distribution
+        </h3>
+        <Chart
+          options={chartData.options}
+          series={chartData.series}
+          type="pie"
+          height={300}
+        />
+      </Card>
+    );
   };
 
   const renderOpenWaterBarChart = () => {
@@ -980,9 +1061,10 @@ return (
           <p className="text-gray-600">Comprehensive analysis of your freediving performance</p>
         </div>
 
-{/* Dive Type Distribution and Mood Analytics */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+{/* Dive Analytics Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {renderPieChart()}
+          {renderDisciplinesPieChart()}
           {renderMoodPieChart()}
         </div>
         
