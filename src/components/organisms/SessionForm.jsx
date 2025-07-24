@@ -33,22 +33,18 @@ const [sessionData, setSessionData] = useState({
   });
   
   const [dives, setDives] = useState([]);
-  const [currentDive, setCurrentDive] = useState({
+const [currentDive, setCurrentDive] = useState({
     depth: "",
     distance: "",
     time: "",
     notes: ""
-notes: ""
   });
   
   const [instructors, setInstructors] = useState([]);
   const [loading, setLoading] = useState(false);
   const [photoPreview, setPhotoPreview] = useState(null);
 
-  useEffect(() => {
-    loadInstructors();
-
-  const loadInstructors = async () => {
+const loadInstructors = async () => {
     try {
       const instructorData = await UserService.getInstructors();
       setInstructors(instructorData);
@@ -56,6 +52,10 @@ notes: ""
       console.error('Failed to load instructors:', error);
     }
   };
+
+  useEffect(() => {
+    loadInstructors();
+  }, []);
 
 const disciplineOptions = {
     open_water: [
@@ -146,7 +146,6 @@ const disciplineOptions = {
     }
   };
 
-  const saveSession = async () => {
 const saveSession = async () => {
     if (!sessionData.type || !sessionData.discipline || dives.length === 0) {
       toast.error("Please complete session details and add at least one dive");
@@ -317,9 +316,9 @@ const saveSession = async () => {
                   src={photoPreview} 
                   alt="Session preview" 
                   className="w-32 h-24 object-cover rounded-lg border"
-                />
+/>
               </div>
-)}
+            )}
           </div>
         )}
 
