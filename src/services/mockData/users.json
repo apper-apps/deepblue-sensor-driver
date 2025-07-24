@@ -51,14 +51,10 @@
       "experienceLevel": "Expert",
       "preferredDepths": "40m+"
     },
-    "preferences": {
-      "visibility": "public",
-      "showContact": true,
-      "showCertifications": true
 "preferences": {
       "visibility": "public",
       "showContact": true,
-"showCertifications": true
+      "showCertifications": true
     },
     "goals": {
       "staticMilestones": {
@@ -172,7 +168,9 @@
         }
       }
     },
-    "profileComplete": true
+"profileComplete": true
+  },
+  {
     "Id": 2,
     "email": "marco.instructor@deepblue.com",
     "password": "instructor123",
@@ -227,7 +225,6 @@
     "preferences": {
       "visibility": "public",
       "showContact": true,
-      "showCertifications": true
 "showCertifications": true
     },
     "goals": {
@@ -328,7 +325,8 @@
         }
       }
     },
-    "profileComplete": true
+"profileComplete": true
+  },
   {
     "Id": 3,
     "email": "alex.student@example.com",
@@ -375,7 +373,6 @@
     "preferences": {
       "visibility": "public",
       "showContact": false,
-      "showCertifications": true
 "showCertifications": true
     },
     "goals": {
@@ -457,7 +454,8 @@
         }
       }
     },
-    "profileComplete": true
+"profileComplete": true
+  },
   {
     "Id": 4,
     "email": "maya.diver@example.com",
@@ -513,7 +511,6 @@
     "preferences": {
       "visibility": "public",
       "showContact": true,
-      "showCertifications": true
 "showCertifications": true
     },
     "goals": {
@@ -604,7 +601,8 @@
         }
       }
     },
-    "profileComplete": true
+"profileComplete": true
+  },
   {
     "Id": 5,
     "email": "inactive@example.com",
@@ -625,7 +623,6 @@
     "preferences": {
       "visibility": "private",
       "showContact": false,
-      "showCertifications": false
 "showCertifications": false
     },
     "goals": {
