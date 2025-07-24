@@ -45,12 +45,12 @@ function AppContent() {
 return (
     <div className={`min-h-screen transition-colors duration-300 ${
       currentTheme === 'dark' 
-        ? 'bg-gray-900' 
+        ? 'bg-gray-900 text-gray-100' 
         : currentTheme === 'dive'
-        ? 'bg-gradient-to-br from-ocean-deep to-gray-900'
+        ? 'bg-gradient-to-br from-ocean-deep to-gray-900 text-sky-100'
         : currentTheme === 'sunset'
-        ? 'bg-gradient-to-br from-orange-100 to-yellow-100'
-        : 'bg-gray-50'
+        ? 'bg-gradient-to-br from-orange-100 to-yellow-100 text-amber-800'
+        : 'bg-gray-50 text-gray-900'
     }`}>
       <Header />
       

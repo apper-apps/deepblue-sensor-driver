@@ -56,6 +56,17 @@ colors: {
           700: '#5774cc',
           800: '#465fb3',
           900: '#354a99',
+        },
+        // Theme-aware text colors
+        'theme-text': {
+          primary: 'var(--text-primary)',
+          secondary: 'var(--text-secondary)',
+          muted: 'var(--text-muted)',
+          inverse: 'var(--text-inverse)',
+          accent: 'var(--text-accent)',
+          danger: 'var(--text-danger)',
+          success: 'var(--text-success)',
+          warning: 'var(--text-warning)',
         }
       },
       backgroundImage: {
