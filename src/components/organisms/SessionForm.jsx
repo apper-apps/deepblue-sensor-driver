@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import FormField from "@/components/molecules/FormField";
-import Button from "@/components/atoms/Button";
-import Card from "@/components/atoms/Card";
-import ApperIcon from "@/components/ApperIcon";
-import DisciplineBadge from "@/components/molecules/DisciplineBadge";
-import { SessionService } from "@/services/api/sessionService";
+import { format } from "date-fns";
+import { useAuth } from "@/contexts/AuthContext";
 import { DiveService } from "@/services/api/diveService";
 import { UserService } from "@/services/api/userService";
-import { useAuth } from "@/contexts/AuthContext";
-import { format } from "date-fns";
+import { SessionService } from "@/services/api/sessionService";
+import ApperIcon from "@/components/ApperIcon";
+import Select from "@/components/atoms/Select";
+import Card from "@/components/atoms/Card";
+import Button from "@/components/atoms/Button";
+import DisciplineBadge from "@/components/molecules/DisciplineBadge";
+import FormField from "@/components/molecules/FormField";
 
 const SessionForm = () => {
   const navigate = useNavigate();
@@ -37,14 +38,15 @@ const [sessionData, setSessionData] = useState({
     distance: "",
     time: "",
     notes: ""
+notes: ""
   });
   
   const [instructors, setInstructors] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [photoPreview, setPhotoPreview] = useState(null);
 
   useEffect(() => {
     loadInstructors();
-  }, []);
 
   const loadInstructors = async () => {
     try {
@@ -126,20 +128,34 @@ const disciplineOptions = {
     setDives(prev => [...prev, newDive]);
     setCurrentDive({ depth: "", distance: "", time: "", notes: "" });
     toast.success("Dive added successfully");
-  };
+};
 
   const removeDive = (diveId) => {
     setDives(prev => prev.filter(dive => dive.Id !== diveId));
     toast.success("Dive removed");
   };
 
+  const handlePhotoUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setPhotoPreview(event.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const saveSession = async () => {
+const saveSession = async () => {
     if (!sessionData.type || !sessionData.discipline || dives.length === 0) {
       toast.error("Please complete session details and add at least one dive");
       return;
     }
 
-try {
+    setLoading(true);
+    
+    try {
       const session = await SessionService.create({
         date: sessionData.date,
         type: sessionData.type,
@@ -277,13 +293,33 @@ try {
                 </option>
               ))}
             </FormField>
-            
-            <FormField
+<FormField
               label="Location"
               value={sessionData.location}
               onChange={(e) => handleSessionChange("location", e.target.value)}
-placeholder="Enter dive location"
+              placeholder="Enter dive location"
             />
+          </div>
+        )}
+
+        {/* Photo Upload */}
+        {sessionData.type && sessionData.discipline && (
+          <div className="mt-4">
+            <FormField
+              label="Session Photo (Optional)"
+              type="file"
+              accept="image/*"
+              onChange={handlePhotoUpload}
+            />
+            {photoPreview && (
+              <div className="mt-3">
+                <img 
+                  src={photoPreview} 
+                  alt="Session preview" 
+                  className="w-32 h-24 object-cover rounded-lg border"
+                />
+              </div>
+)}
           </div>
         )}
 

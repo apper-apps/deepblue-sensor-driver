@@ -128,52 +128,74 @@ const disciplineOptions = {
       {filteredSessions.length === 0 ? (
         <Empty message="No sessions match your filters" />
       ) : (
-        <div className="space-y-4">
+<div className="space-y-4">
           {filteredSessions.map((session) => (
             <Card key={session.Id} className="p-6 hover:shadow-lg transition-shadow">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center space-x-3 mb-2">
-                    <h3 className="text-lg font-semibold font-display text-gray-900">
-                      {format(new Date(session.date), "MMM d, yyyy")}
-                    </h3>
-                    <DisciplineBadge 
-                      discipline={session.discipline} 
-                      type={session.type} 
+              <div className="flex flex-col lg:flex-row gap-6">
+                {/* Image Section */}
+                {session.photos && session.photos.length > 0 && (
+                  <div className="lg:w-48 flex-shrink-0">
+                    <img 
+                      src={session.photos[0]} 
+                      alt={`Dive at ${session.location}`}
+                      className="w-full h-32 lg:h-24 object-cover rounded-lg"
                     />
                   </div>
-                  
-                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
-                    <div className="flex items-center">
-                      <ApperIcon name="MapPin" size={16} className="mr-1" />
-                      {session.location || "No location"}
-                    </div>
-                    <div className="flex items-center">
-                      <ApperIcon name="Target" size={16} className="mr-1" />
-                      {session.diveCount} dives
-                    </div>
-                    {session.bestValue && (
-                      <div className="flex items-center">
-                        <ApperIcon name="TrendingUp" size={16} className="mr-1" />
-                        Best: {session.bestValue}
-                      </div>
-                    )}
-                  </div>
-                  
-                  {session.notes && (
-                    <p className="mt-2 text-sm text-gray-600 line-clamp-2">
-                      {session.notes}
-                    </p>
-                  )}
-                </div>
+                )}
                 
-                <div className="mt-4 sm:mt-0 sm:ml-4">
-                  <Link to={`/session/${session.Id}`}>
-                    <Button variant="outline" size="sm">
-                      <ApperIcon name="Eye" size={16} className="mr-2" />
-                      View Details
-                    </Button>
-                  </Link>
+                {/* Content Section */}
+                <div className="flex-1">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-3 mb-2">
+                        <h3 className="text-lg font-semibold font-display text-gray-900">
+                          {format(new Date(session.date), "MMM d, yyyy")}
+                        </h3>
+                        <DisciplineBadge 
+                          discipline={session.discipline} 
+                          type={session.type} 
+                        />
+                      </div>
+                      
+                      <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+                        <div className="flex items-center">
+                          <ApperIcon name="MapPin" size={16} className="mr-1" />
+                          {session.location || "No location"}
+                        </div>
+                        <div className="flex items-center">
+                          <ApperIcon name="Target" size={16} className="mr-1" />
+                          {session.diveCount} dives
+                        </div>
+                        {session.bestValue && (
+                          <div className="flex items-center">
+                            <ApperIcon name="TrendingUp" size={16} className="mr-1" />
+                            Best: {session.bestValue}
+                          </div>
+                        )}
+                        {session.photos && session.photos.length > 0 && (
+                          <div className="flex items-center">
+                            <ApperIcon name="Camera" size={16} className="mr-1" />
+                            {session.photos.length} photo{session.photos.length > 1 ? 's' : ''}
+                          </div>
+                        )}
+                      </div>
+                      
+                      {session.notes && (
+                        <p className="mt-2 text-sm text-gray-600 line-clamp-2">
+                          {session.notes}
+                        </p>
+                      )}
+                    </div>
+                    
+                    <div className="mt-4 sm:mt-0 sm:ml-4">
+                      <Link to={`/session/${session.Id}`}>
+                        <Button variant="outline" size="sm">
+                          <ApperIcon name="Eye" size={16} className="mr-2" />
+                          View Details
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               </div>
             </Card>

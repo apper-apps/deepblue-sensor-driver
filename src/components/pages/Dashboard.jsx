@@ -1,10 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import ApperIcon from "@/components/ApperIcon";
+import Certifications from "@/components/pages/Certifications";
+import Profile from "@/components/pages/Profile";
+import DashboardStats from "@/components/organisms/DashboardStats";
 import Card from "@/components/atoms/Card";
 import Button from "@/components/atoms/Button";
-import ApperIcon from "@/components/ApperIcon";
-import DashboardStats from "@/components/organisms/DashboardStats";
-import { useAuth } from "@/contexts/AuthContext";
 const Dashboard = () => {
   const { user, isAdmin, isInstructor } = useAuth();
 
@@ -78,10 +80,9 @@ const Dashboard = () => {
             </Link>
           </div>
         </Card>
-      )}
+)}
       
       <DashboardStats />
-
       {/* Quick Start for New Users */}
       {user?.certifications?.length === 0 && (
         <Card className="p-6 bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-200">
